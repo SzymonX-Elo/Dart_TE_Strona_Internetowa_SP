@@ -1,0 +1,2173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kalkulator ELO Dart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { margin: 0; padding: 0; background: #1a1a1a; color: white; }
+        
+        /* MENU NAWIGACYJNE - RESPONSYWNE */
+        .nav-menu {
+            display: flex;
+            background: #2d2d2d;
+            padding: 0;
+            border-bottom: 2px solid #4CAF50;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            flex: 1 0 auto;
+            min-width: 120px;
+            padding: 12px 8px;
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        @media (max-width: 480px) {
+            .nav-btn {
+                min-width: 90px;
+                padding: 10px 5px;
+                font-size: 12px;
+            }
+            .nav-btn span {
+                font-size: 10px;
+            }
+        }
+        @media (max-width: 360px) {
+            .nav-btn {
+                min-width: 80px;
+                padding: 8px 4px;
+                font-size: 11px;
+            }
+        }
+        .nav-btn:hover {
+            background: #3a3a3a;
+            color: white;
+        }
+        .nav-btn.active {
+            color: #4CAF50;
+            border-bottom: 3px solid #4CAF50;
+            font-weight: bold;
+            background: #333;
+        }
+        .nav-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .nav-btn.disabled:hover {
+            background: transparent;
+            color: #aaa;
+        }
+        .nav-icon {
+            font-size: 18px;
+        }
+        @media (max-width: 480px) {
+            .nav-icon {
+                font-size: 16px;
+            }
+        }
+        
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 15px; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+        }
+        
+        h1 { 
+            text-align: center; 
+            color: #4CAF50; 
+            margin-bottom: 20px; 
+            margin-top: 10px; 
+            font-size: 22px;
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+        }
+        
+        .player-box { 
+            background: #2d2d2d; 
+            padding: 12px; 
+            margin: 12px 0; 
+            border-radius: 8px; 
+        }
+        @media (max-width: 480px) {
+            .player-box {
+                padding: 10px;
+                margin: 10px 0;
+            }
+        }
+        
+        .input-group { margin-bottom: 8px; }
+        label { display: block; margin-bottom: 4px; color: #aaa; font-size: 14px; }
+        input { 
+            width: 100%; 
+            padding: 10px; 
+            font-size: 16px; 
+            border: 1px solid #444; 
+            background: #333; 
+            color: white; 
+            border-radius: 5px; 
+        }
+        @media (max-width: 480px) {
+            input {
+                padding: 8px;
+                font-size: 15px;
+            }
+        }
+        
+        .elo-display { font-size: 22px; font-weight: bold; margin: 8px 0; }
+        @media (max-width: 480px) {
+            .elo-display {
+                font-size: 20px;
+            }
+        }
+        
+        .chance { 
+            text-align: center; 
+            font-size: 16px; 
+            margin: 15px 0; 
+            color: #BB86FC; 
+            padding: 8px;
+            background: rgba(187, 134, 252, 0.1);
+            border-radius: 5px;
+        }
+        @media (max-width: 480px) {
+            .chance {
+                font-size: 15px;
+                margin: 12px 0;
+                padding: 6px;
+            }
+        }
+        
+        .buttons { 
+            display: flex; 
+            gap: 8px; 
+            margin: 15px 0; 
+            flex-wrap: wrap;
+        }
+        @media (max-width: 480px) {
+            .buttons {
+                gap: 6px;
+                margin: 12px 0;
+            }
+        }
+        
+        button { 
+            flex: 1; 
+            padding: 12px; 
+            font-size: 14px; 
+            border: none; 
+            border-radius: 5px; 
+            color: white; 
+            cursor: pointer; 
+            min-width: 100px;
+        }
+        @media (max-width: 480px) {
+            button {
+                padding: 10px 8px;
+                font-size: 13px;
+                min-width: 0;
+            }
+        }
+        
+        .btn-win1 { background: #4CAF50; }
+        .btn-win2 { background: #F44336; }
+        .btn-draw { background: #FF9800; }
+        .btn-add { background: #9C27B0; }
+        .btn-login { background: #2196F3; }
+        .btn-logout { background: #f44336; }
+        .btn-dev { background: #FFFFFF; color: #1a1a1a; }
+        .btn-toggle { background: #607D8B; }
+        
+        .history { 
+            margin-top: 25px; 
+            background: #2d2d2d; 
+            padding: 12px; 
+            border-radius: 8px; 
+        }
+        .players-list { margin-top: 15px; }
+        .player-item { 
+            background: #333; 
+            padding: 10px; 
+            margin: 5px 0; 
+            border-radius: 5px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .player-item:nth-child(odd) { background: #3a3a3a; }
+        
+        /* PRZYCISKI USUWANIA */
+        .delete-btn { 
+            background: #f44336; 
+            color: white; 
+            border: none; 
+            width: 30px; 
+            height: 30px; 
+            min-width: 30px;
+            min-height: 30px;
+            border-radius: 5px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 14px;
+            padding: 0;
+            flex-shrink: 0;
+        }
+        @media (max-width: 480px) {
+            .delete-btn, .lock-btn {
+                width: 28px;
+                height: 28px;
+                min-width: 28px;
+                min-height: 28px;
+                font-size: 13px;
+            }
+        }
+        
+        .lock-btn { 
+            background: #FF9800; 
+            color: white; 
+            border: none; 
+            width: 30px; 
+            height: 30px; 
+            min-width: 30px;
+            min-height: 30px;
+            border-radius: 5px; 
+            cursor: default;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            padding: 0;
+            flex-shrink: 0;
+        }
+        
+        select { 
+            width: 100%; 
+            padding: 10px; 
+            background: #333; 
+            color: white; 
+            border: 1px solid #444; 
+            border-radius: 5px; 
+            font-size: 15px;
+        }
+        @media (max-width: 480px) {
+            select {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+        
+        .login-box { 
+            background: #2d2d2d; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 15px; 
+            text-align: center; 
+        }
+        .admin-panel { 
+            background: #1a1a1a; 
+            padding: 12px; 
+            border-radius: 8px; 
+            margin-top: 15px; 
+            border: 2px solid #FF9800; 
+        }
+        .user-panel { 
+            background: #1a1a1a; 
+            padding: 12px; 
+            border-radius: 8px; 
+            margin-top: 15px; 
+            border: 2px solid #2196F3; 
+        }
+        .dev-panel { 
+            background: #1a1a1a; 
+            padding: 12px; 
+            border-radius: 8px; 
+            margin-top: 15px; 
+            border: 2px solid #FFFFFF; 
+        }
+        .hidden { display: none; }
+        .role-badge { 
+            display: inline-block; 
+            padding: 3px 8px; 
+            border-radius: 12px; 
+            font-size: 11px; 
+            font-weight: bold; 
+            margin-left: 8px; 
+        }
+        @media (max-width: 480px) {
+            .role-badge {
+                font-size: 10px;
+                padding: 2px 6px;
+                margin-left: 6px;
+            }
+        }
+        
+        .admin-badge { background: #FF9800; color: black; }
+        .user-badge { background: #2196F3; color: white; }
+        .dev-badge { background: #FFFFFF; color: #1a1a1a; border: 1px solid #ccc; }
+        .swap-btn { 
+            background: transparent; 
+            border: none; 
+            color: #BB86FC; 
+            cursor: pointer; 
+            font-size: 22px; 
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @media (max-width: 480px) {
+            .swap-btn {
+                font-size: 20px;
+                padding: 0 6px;
+            }
+        }
+        
+        .swap-btn:hover { color: #ffffff; }
+        .swap-btn:disabled { 
+            color: #666; 
+            cursor: not-allowed; 
+        }
+        .player-select-row {
+            display: flex; 
+            gap: 5px; 
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        /* STRONY */
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* MODAL DO WERYFIKACJI KODU - POPRAWIONY */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid #4CAF50;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+        }
+        
+        .close-modal {
+            background: #f44336;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .close-modal:hover {
+            background: #d32f2f;
+        }
+        
+        .code-input {
+            letter-spacing: 8px;
+            font-size: 24px;
+            text-align: center;
+            font-family: monospace;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 2px solid #444;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .player-name-highlight {
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 10px 0;
+            text-align: center;
+            padding: 8px;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 5px;
+        }
+        
+        /* STRONA GRY */
+        .games-page {
+            text-align: center;
+            padding: 30px 15px;
+        }
+        
+        /* STRONA RANG */
+        .ranks-page {
+            padding: 15px;
+        }
+        
+        /* STRONA INFO */
+        .info-page {
+            padding: 15px;
+        }
+        
+        .info-box {
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        @media (max-width: 480px) {
+            .info-box {
+                padding: 12px;
+                font-size: 13px;
+            }
+        }
+        
+        .coming-soon {
+            text-align: center;
+            font-size: 22px;
+            color: #BB86FC;
+            margin-top: 40px;
+            padding: 20px;
+        }
+        @media (max-width: 480px) {
+            .coming-soon {
+                font-size: 20px;
+                margin-top: 30px;
+                padding: 15px;
+            }
+        }
+        
+        /* MOBILE OPTIMIZATION */
+        .mobile-only { display: none; }
+        .desktop-only { display: block; }
+        
+        @media (max-width: 480px) {
+            .mobile-only { display: block; }
+            .desktop-only { display: none; }
+        }
+        
+        /* Lepsze zarządzanie tekstem na małych ekranach */
+        .player-name-truncate {
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        @media (max-width: 480px) {
+            .player-name-truncate {
+                max-width: 120px;
+            }
+        }
+        @media (max-width: 360px) {
+            .player-name-truncate {
+                max-width: 100px;
+            }
+        }
+        
+        /* KOD W LISCIE GRACZY */
+        .player-code {
+            background: rgba(76, 175, 80, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #4CAF50;
+        }
+        
+        /* ADMIN PANEL IMPROVEMENTS */
+        .admin-input-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        
+        .admin-input-group {
+            flex: 1;
+        }
+        
+        .generate-code-btn {
+            background: #607D8B;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            height: 42px;
+            min-width: 80px;
+        }
+        
+        .generate-code-btn:hover {
+            background: #546E7A;
+        }
+        
+        /* DEV PANEL STYLES */
+        .role-toggle-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .role-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .status-enabled {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .status-disabled {
+            background: #f44336;
+            color: white;
+        }
+        
+        .dev-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            align-items: center;
+        }
+        
+        .password-input {
+            flex: 2;
+        }
+        
+        .toggle-btn {
+            flex: 1;
+            min-width: 120px;
+        }
+    </style>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <!-- MENU NAWIGACYJNE - ZOPTYMALIZOWANE DLA TELEFONU -->
+    <div class="nav-menu">
+        <button class="nav-btn active" onclick="showPage('elo')">
+            <span class="nav-icon">🎯</span>
+            <span>Kalkulator Elo</span>
+        </button>
+        <button class="nav-btn" id="gamesBtn" onclick="showPage('games')">
+            <span class="nav-icon">🎮</span>
+            <span>Gry</span>
+        </button>
+        <button class="nav-btn" onclick="showPage('ranks')">
+            <span class="nav-icon">⭐</span>
+            <span>Rangi</span>
+        </button>
+        <button class="nav-btn" onclick="showPage('info')">
+            <span class="nav-icon">ℹ️</span>
+            <span>Info</span>
+        </button>
+    </div>
+
+    <!-- MODAL DO WERYFIKACJI KODU - POPRAWIONY -->
+    <div id="codeModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 style="margin: 0; color: #4CAF50;">🔒 WERYFIKACJI KODU</h3>
+                <button class="close-modal" onclick="closeCodeModal()">✕</button>
+            </div>
+            
+            <div id="modalMessage" style="text-align: center; margin-bottom: 15px;">
+                <p>Wprowadź 5-cyfrowy kod weryfikacyjny dla wybranego gracza</p>
+            </div>
+            
+            <div class="player-name-highlight" id="modalPlayerName">
+                <!-- Tu pojawi się nazwa gracza -->
+            </div>
+            
+            <div class="input-group">
+                <label style="text-align: center;">5-cyfrowy kod:</label>
+                <input type="text" 
+                       id="codeInput" 
+                       class="code-input" 
+                       maxlength="5" 
+                       placeholder="00000"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5)">
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-logout" onclick="closeCodeModal()" style="flex: 1;">ANULUJ</button>
+                <button class="btn-win1" onclick="submitCode()" style="flex: 2;">ZATWIERDŹ KOD</button>
+            </div>
+            
+            <div style="text-align: center; margin-top: 15px; font-size: 12px; color: #aaa;">
+                Naciśnij ESC lub kliknij poza modal aby zamknąć
+            </div>
+        </div>
+    </div>
+
+    <!-- STRONA KALKULATORA ELO -->
+    <div class="container page active" id="eloPage">
+        <h1>🎯 KALKULATOR ELO DART</h1>
+        
+        <!-- Panel logowania -->
+        <div class="login-box" id="loginBox">
+            <h3>ZALOGUJ SIĘ</h3>
+            <p style="font-size: 14px; color: #aaa;">Dane synchronizowane w chmurze Firebase</p>
+            <div class="input-group">
+                <input type="password" id="adminPassword" placeholder="Wprowadź hasło...">
+            </div>
+            <button class="btn-login" onclick="login()">ZALOGUJ</button>
+            <div style="margin-top: 10px; font-size: 12px; color: #aaa;">
+                <span class="desktop-only">Bez logowania: tylko przeglądanie<br>
+                Z logowaniem: dostęp do pełnych funkcji</span>
+                <span class="mobile-only">Gość: przeglądanie<br>
+                Zalogowany: pełny dostęp</span>
+            </div>
+        </div>
+        
+        <!-- Admin Panel (ukryty domyślnie) -->
+        <div class="admin-panel hidden" id="adminPanel">
+            <h3 style="margin-top: 0;">👑 KONTO PREMIUM <span class="role-badge admin-badge">PREMIUM</span></h3>
+            
+            <div class="input-group">
+                <label>Imię nowego gracza:</label>
+                <input type="text" id="newPlayerName" placeholder="np. Jan Kowalski">
+            </div>
+            
+            <div class="input-group">
+                <label>Początkowe ELO:</label>
+                <input type="number" id="newPlayerElo" value="1500" placeholder="1500">
+            </div>
+            
+            <div class="admin-input-row">
+                <div class="admin-input-group">
+                    <label>5-cyfrowy kod weryfikacyjny:</label>
+                    <input type="text" 
+                           id="newPlayerCode" 
+                           maxlength="5" 
+                           placeholder="12345"
+                           oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5)">
+                </div>
+                <button onclick="generateRandomCode()" class="generate-code-btn">
+                    Losuj
+                </button>
+            </div>
+            
+            <small style="color: #aaa; font-size: 12px; display: block; margin-top: 5px;">
+                Możesz wpisać własny kod lub użyć przycisku "Losuj". Kody mogą się powtarzać.
+            </small>
+            
+            <div style="display: flex; gap: 8px; margin-top: 15px;">
+                <button class="btn-add" onclick="addNewPlayer()" style="flex: 2;">➕ DODAJ GRACZA</button>
+                <button class="btn-logout" onclick="logout()" style="flex: 1;">WYLOGUJ</button>
+            </div>
+        </div>
+        
+        <!-- User Panel (ukryty domyślnie) -->
+        <div class="user-panel hidden" id="userPanel">
+            <h3 style="margin-top: 0;">👤 KONTO UŻYTKOWNIKA <span class="role-badge user-badge">USER</span></h3>
+            <button class="btn-logout" onclick="logout()" style="width: 100%;">WYLOGUJ</button>
+        </div>
+        
+        <!-- Dev Panel (ukryty domyślnie) -->
+        <div class="dev-panel hidden" id="devPanel">
+            <h3 style="margin-top: 0;">⚙️ PANEL SYSTEMOWY <span class="role-badge dev-badge">SYSTEM</span></h3>
+            
+            <!-- Status rang -->
+            <div class="role-toggle-section">
+                <h4 style="margin-top: 0; color: #FFFFFF;">🎮 ZARZĄDZANIE DOSTĘPAMI</h4>
+                
+                <div style="margin-bottom: 15px;">
+                    <strong>Dostęp Premium:</strong> 
+                    <span id="adminStatus" class="role-status status-disabled">WYŁĄCZONY</span>
+                    <div class="dev-controls">
+                        <input type="password" 
+                               id="adminPasswordInput" 
+                               class="password-input" 
+                               placeholder="Ustaw hasło dla dostępu Premium...">
+                        <button class="btn-toggle toggle-btn" onclick="toggleAdminRole()">
+                            WŁĄCZ
+                        </button>
+                    </div>
+                    <small style="color: #aaa; display: block; margin-top: 5px;">
+                        Aktualne hasło: <span id="currentAdminPassword">brak</span>
+                    </small>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <strong>Dostęp Użytkownika:</strong> 
+                    <span id="userStatus" class="role-status status-disabled">WYŁĄCZONY</span>
+                    <div class="dev-controls">
+                        <input type="password" 
+                               id="userPasswordInput" 
+                               class="password-input" 
+                               placeholder="Ustaw hasło dla dostępu Użytkownika...">
+                        <button class="btn-toggle toggle-btn" onclick="toggleUserRole()">
+                            WŁĄCZ
+                        </button>
+                    </div>
+                    <small style="color: #aaa; display: block; margin-top: 5px;">
+                        Aktualne hasło: <span id="currentUserPassword">brak</span>
+                    </small>
+                </div>
+                
+                <div style="font-size: 12px; color: #aaa; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+                    <strong>⚠️ Uwaga:</strong> Gdy dostęp jest wyłączony, nikt nie może się na niego zalogować.<br>
+                    Przeglądanie bez logowania jest zawsze dostępne.
+                </div>
+            </div>
+            
+            <!-- Dodawanie graczy -->
+            <div style="margin-top: 20px;">
+                <h4 style="margin-top: 0; color: #FFFFFF;">➕ DODAWANIE GRACZY</h4>
+                
+                <div class="input-group">
+                    <label>Imię nowego gracza:</label>
+                    <input type="text" id="devNewPlayerName" placeholder="np. Jan Kowalski">
+                </div>
+                
+                <div class="input-group">
+                    <label>Początkowe ELO:</label>
+                    <input type="number" id="devNewPlayerElo" value="1500" placeholder="1500">
+                </div>
+                
+                <div class="admin-input-row">
+                    <div class="admin-input-group">
+                        <label>5-cyfrowy kod weryfikacyjny:</label>
+                        <input type="text" 
+                               id="devNewPlayerCode" 
+                               maxlength="5" 
+                               placeholder="12345"
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5)">
+                    </div>
+                    <button onclick="generateRandomCodeDev()" class="generate-code-btn">
+                        Losuj
+                    </button>
+                </div>
+                
+                <div style="display: flex; gap: 8px; margin-top: 15px;">
+                    <button class="btn-add" onclick="addNewPlayerDev()" style="flex: 2;">➕ DODAJ GRACZA</button>
+                    <button class="btn-logout" onclick="logout()" style="flex: 1;">WYLOGUJ</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Wybór graczy do meczu -->
+        <div class="player-box">
+            <h3 style="margin-top: 0;">WYBIERZ GRACZY DO MECZU</h3>
+            
+            <div class="player-select-row">
+                <div style="flex: 1;">
+                    <label>Gracz A:</label>
+                    <select id="selectPlayerA">
+                        <option value="">Wybierz gracza</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; align-items: center; justify-content: center; min-height: 60px;">
+                    <button class="swap-btn" onclick="swapPlayers()" id="swapBtn" title="Zamień graczy miejscami">
+                        🔄
+                    </button>
+                </div>
+                
+                <div style="flex: 1;">
+                    <label>Gracz B:</label>
+                    <select id="selectPlayerB">
+                        <option value="">Wybierz gracza</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="chance" id="chance">Wybierz graczy aby zobaczyć szanse</div>
+            
+            <div class="buttons">
+                <button class="btn-win1" onclick="playerAWins()" id="btnA">GRACZ A wygrywa</button>
+                <button class="btn-draw" onclick="draw()" id="btnDraw">REMIS</button>
+                <button class="btn-win2" onclick="playerBWins()" id="btnB">GRACZ B wygrywa</button>
+            </div>
+            
+            <div style="text-align: center; margin-top: 10px; color: #aaa; font-size: 12px;">
+                ⚠️ Po kliknięciu przycisku będzie wymagane podanie kodu weryfikacyjnego dla obu graczy
+            </div>
+        </div>
+        
+        <!-- Lista wszystkich graczy -->
+        <div class="players-list">
+            <h3 style="margin-top: 0;">🏆 RANKING GRACZY</h3>
+            <div id="allPlayersList">Ładowanie z chmury...</div>
+        </div>
+        
+        <!-- Historia zmian -->
+        <div class="history">
+            <h3 style="margin-top: 0;">📜 OSTATNIE MECZE</h3>
+            <div id="historyList">-</div>
+        </div>
+        
+        <!-- Info o synchronizacji -->
+        <div style="text-align: center; margin-top: 20px; color: #777; font-size: 11px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 5px;">
+            <span class="desktop-only">
+                🔄 Synchronizacja z Firebase | 💾 Auto-zapis | 👥 Wielu użytkowników | ☁️ Chmura
+            </span>
+            <span class="mobile-only">
+                🔄 Synchronizacja | 💾 Auto-zapis | ☁️ Chmura
+            </span>
+        </div>
+    </div>
+
+    <!-- STRONA GRY -->
+    <div class="container page" id="gamesPage">
+        <div class="games-page">
+            <h1>🎮 GRY I TURNIEJE</h1>
+            <div class="coming-soon">🚧 STRONA W BUDOWIE 🚧</div>
+            <p style="text-align: center; color: #aaa; margin-top: 20px; font-size: 14px;">
+                Tutaj będą dostępne różne tryby gry i turnieje
+            </p>
+        </div>
+    </div>
+
+    <!-- STRONA RANG -->
+    <div class="container page" id="ranksPage">
+        <div class="ranks-page">
+            <h1>⭐ SYSTEM RANG</h1>
+            <div class="coming-soon">🚧 STRONA W BUDOWIE 🚧</div>
+            <p style="text-align: center; color: #aaa; margin-top: 20px; font-size: 14px;">
+                Tutaj będzie system rang i osiągnięć
+            </p>
+        </div>
+    </div>
+
+    <!-- STRONA INFO -->
+    <div class="container page" id="infoPage">
+        <div class="info-page">
+            <h1>ℹ️ INFORMACJE</h1>
+            
+            <div class="info-box">
+                <h4 style="margin-top: 0; color: #4CAF50;">🔐 SYSTEM WERYFIKACJI KODÓW</h4>
+                <p>Każdy gracz ma 5-cyfrowy kod weryfikacyjny. Podczas meczu wymagane jest podanie kodu gracza, aby:</p>
+                <ul style="padding-left: 20px;">
+                    <li>Zapobiec kradzieży ELO przez innych graczy</li>
+                    <li>Potwierdzić tożsamość zawodnika</li>
+                    <li>Zapewnić uczciwość rozgrywek</li>
+                    <li>Kody mogą się powtarzać</li>
+                </ul>
+                <p><strong>Proces weryfikacji:</strong></p>
+                <ol style="padding-left: 20px;">
+                    <li>Wybierz graczy do meczu</li>
+                    <li>Kliknij przycisk z wynikiem</li>
+                    <li>Wprowadź kod dla Gracza A</li>
+                    <li>Wprowadź kod dla Gracza B</li>
+                    <li>Mecz zostanie zapisany po poprawnej weryfikacji obu kodów</li>
+                </ol>
+            </div>
+            
+            <div class="info-box">
+                <h4 style="margin-top: 0; color: #4CAF50;">📊 O SYSTEMIE ELO</h4>
+                <p>System Elo służy do obliczania względnej siły graczy na podstawie wyników meczów.</p>
+                <ul style="padding-left: 20px;">
+                    <li><strong>K = 32</strong> - współczynnik zmiany dla darta</li>
+                    <li><strong>ELO początkowe:</strong> 1500 punktów</li>
+                    <li><strong>Wzór:</strong> 1 / (1 + 10^((R_B - R_A)/400))</li>
+                </ul>
+            </div>
+            
+            <div class="info-box">
+                <h4 style="margin-top: 0; color: #2196F3;">🔐 POZIOMY DOSTĘPU</h4>
+                <ul style="padding-left: 20px;">
+                    <li><strong>Przeglądanie:</strong> Przeglądanie rankingu, ukryte nazwiska (zawsze dostępne)</li>
+                    <li><strong>Użytkownik:</strong> Rozgrywanie meczów, pełne nazwiska (do włączenia)</li>
+                    <li><strong>Premium:</strong> Dodawanie/Usuwanie graczy (do włączenia)</li>
+                </ul>
+                <p style="margin-top: 10px; font-size: 13px; color: #aaa;">
+                    Dostępy Użytkownika i Premium mogą być włączane/wyłączane przez administratora systemu.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // GŁÓWNY KOD APLIKACJI - BEZ KONFIGURACJI FIREBASE
+        // ============================================
+        
+        // === ZMIENNE GLOBALNE ===
+        let db = null;
+        let auth = null;
+        let players = [];
+        let history = [];
+        let currentUserRole = 'guest';
+        let unsubscribePlayers = null;
+        let unsubscribeHistory = null;
+        let unsubscribeSettings = null;
+        let currentPage = 'elo';
+        
+        // Ustawienia systemu
+        let systemSettings = {
+            adminEnabled: false,
+            userEnabled: false,
+            adminPassword: '',
+            userPassword: ''
+        };
+        
+        // Zmienne do weryfikacji kodu
+        let pendingMatch = null;
+        let verificationPlayer = null;
+        
+        // === SPRAWDZENIE CZY FIREBASE JEST DOSTĘPNY ===
+        function checkFirebaseAvailability() {
+            if (typeof firebase === 'undefined') {
+                showFirebaseError('Firebase SDK nie został załadowany');
+                return false;
+            }
+            
+            if (!window.firebaseConfig) {
+                showFirebaseError('Brak konfiguracji Firebase');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function showFirebaseError(message) {
+            const loginBox = document.getElementById('loginBox');
+            if (loginBox) {
+                loginBox.innerHTML = `
+                    <h3 style="color: #f44336;">⚠️ BŁĄD POŁĄCZENIA</h3>
+                    <p>${message}</p>
+                    <p style="font-size: 12px; color: #aaa;">
+                        Skontaktuj się z administratorem aplikacji.
+                    </p>
+                `;
+            }
+            console.error('Firebase Error:', message);
+        }
+        
+        // === INICJALIZACJA APLIKACJI ===
+        function initializeApp() {
+            if (!checkFirebaseAvailability()) {
+                return;
+            }
+            
+            try {
+                // Inicjalizuj Firebase z ukrytej konfiguracji
+                const app = firebase.initializeApp(window.firebaseConfig);
+                db = firebase.firestore();
+                auth = firebase.auth();
+                
+                console.log('✅ Firebase zainicjalizowany pomyślnie');
+                
+                // Załaduj dane i zaktualizuj UI
+                loadData();
+                updateUIForRole();
+                updateMenuForRole();
+                
+                // Dodaj event listeners
+                setupEventListeners();
+                
+                // Generuj kody
+                generateRandomCode();
+                generateRandomCodeDev();
+                
+            } catch (error) {
+                console.error('❌ Błąd inicjalizacji Firebase:', error);
+                showFirebaseError('Nie można połączyć się z bazą danych');
+            }
+        }
+        
+        // === SETUP EVENT LISTENERS ===
+        function setupEventListeners() {
+            // Event listener dla Enter w polu hasła
+            const adminPasswordInput = document.getElementById('adminPassword');
+            if (adminPasswordInput) {
+                adminPasswordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        login();
+                    }
+                });
+            }
+            
+            // Obsługa ESC w modalach
+            document.addEventListener('keydown', function(event) {
+                const modal = document.getElementById('codeModal');
+                if (event.key === 'Escape' && modal && modal.classList.contains('active')) {
+                    closeCodeModal();
+                }
+            });
+            
+            // Kliknięcie poza modal
+            const modalOverlay = document.getElementById('codeModal');
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', function(event) {
+                    if (event.target === this) {
+                        closeCodeModal();
+                    }
+                });
+            }
+        }
+        
+        // === FUNKCJE POMOCNICZE ===
+        function debugPendingMatch() {
+            console.log('=== DEBUG pendingMatch ===');
+            console.log('Czy istnieje?:', pendingMatch ? 'TAK' : 'NIE');
+            if (pendingMatch) {
+                console.log('Gracz A:', pendingMatch.playerA?.name);
+                console.log('Gracz B:', pendingMatch.playerB?.name);
+                console.log('Score A:', pendingMatch.scoreA);
+                console.log('Verification Player:', verificationPlayer);
+            }
+            console.log('==========================');
+        }
+        
+        function generateRandomCode() {
+            const randomCode = Math.floor(10000 + Math.random() * 90000);
+            const element = document.getElementById('newPlayerCode');
+            if (element) {
+                element.value = randomCode;
+                element.focus();
+            }
+        }
+        
+        function generateRandomCodeDev() {
+            const randomCode = Math.floor(10000 + Math.random() * 90000);
+            const element = document.getElementById('devNewPlayerCode');
+            if (element) {
+                element.value = randomCode;
+                element.focus();
+            }
+        }
+        
+        // === MODAL WERYFIKACJI KODU ===
+        function showCodeModal(playerType, playerName) {
+            verificationPlayer = playerType;
+            const modal = document.getElementById('codeModal');
+            const playerNameElement = document.getElementById('modalPlayerName');
+            const message = document.getElementById('modalMessage');
+            
+            if (playerNameElement) playerNameElement.innerHTML = `<strong>${playerName}</strong>`;
+            
+            if (playerType === 'A') {
+                if (message) message.innerHTML = `<p>Wprowadź kod weryfikacyjny dla <strong>Gracza A</strong>:</p>`;
+            } else {
+                if (message) message.innerHTML = `<p>Wprowadź kod weryfikacyjny dla <strong>Gracza B</strong>:</p>`;
+            }
+            
+            const codeInput = document.getElementById('codeInput');
+            if (codeInput) {
+                codeInput.value = '';
+                codeInput.focus();
+            }
+            
+            if (modal) modal.classList.add('active');
+        }
+        
+        function closeCodeModal() {
+            const modal = document.getElementById('codeModal');
+            if (modal) modal.classList.remove('active');
+            // NIE zeruj pendingMatch tutaj! Tylko po zakończeniu meczu
+        }
+        
+        function submitCode() {
+            console.log('submitCode called');
+            debugPendingMatch();
+            
+            const codeInput = document.getElementById('codeInput');
+            if (!codeInput) return;
+            
+            const codeValue = codeInput.value;
+            
+            if (codeValue.length !== 5) {
+                alert('Kod musi mieć dokładnie 5 cyfr!');
+                codeInput.focus();
+                return;
+            }
+            
+            // Sprawdź czy pendingMatch istnieje
+            if (!pendingMatch) {
+                alert('❌ Błąd: Brak danych meczu. Spróbuj ponownie.');
+                closeCodeModal();
+                return;
+            }
+            
+            let playerToVerify = null;
+            let playerName = '';
+            
+            if (verificationPlayer === 'A' && pendingMatch.playerA) {
+                playerToVerify = pendingMatch.playerA;
+                playerName = pendingMatch.playerA.name;
+            } else if (verificationPlayer === 'B' && pendingMatch.playerB) {
+                playerToVerify = pendingMatch.playerB;
+                playerName = pendingMatch.playerB.name;
+            }
+            
+            if (!playerToVerify) {
+                alert('Błąd weryfikacji! Spróbuj ponownie.');
+                closeCodeModal();
+                pendingMatch = null; // Zeruj tylko w przypadku błędu
+                return;
+            }
+            
+            // Sprawdź kod
+            if (playerToVerify.code !== codeValue) {
+                alert(`❌ Nieprawidłowy kod weryfikacyjny dla gracza ${playerName}!`);
+                codeInput.value = '';
+                codeInput.focus();
+                return;
+            }
+            
+            alert(`✅ Poprawny kod dla ${playerName}!`);
+            
+            // Jeśli to był kod Gracza A, przejdź do Gracza B
+            if (verificationPlayer === 'A' && pendingMatch) {
+                // NIE zamykaj modala, tylko zmień na Gracza B
+                showCodeModal('B', pendingMatch.playerB.name);
+            } 
+            // Jeśli to był kod Gracza B, zakończ weryfikację
+            else if (verificationPlayer === 'B' && pendingMatch) {
+                closeCodeModal();
+                
+                // Przekaż dane meczu do obliczeń
+                calculateMatchFinal(
+                    pendingMatch.scoreA, 
+                    pendingMatch.playerA, 
+                    pendingMatch.playerB
+                );
+                
+                // Dopiero TERAZ wyczyść pendingMatch
+                pendingMatch = null;
+                verificationPlayer = null;
+            }
+        }
+        
+        // === NAWIGACJA ===
+        function showPage(pageId) {
+            if (pageId === 'games' && currentUserRole === 'guest') {
+                alert('Zaloguj się aby mieć dostęp do sekcji Gry!');
+                return;
+            }
+            
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const pageElement = document.getElementById(pageId + 'Page');
+            if (pageElement) pageElement.classList.add('active');
+            
+            const btn = document.querySelector(`.nav-btn[onclick*="${pageId}"]`);
+            if (btn) btn.classList.add('active');
+            
+            currentPage = pageId;
+        }
+        
+        function updateMenuForRole() {
+            const gamesBtn = document.getElementById('gamesBtn');
+            if (!gamesBtn) return;
+            
+            if (currentUserRole === 'guest') {
+                gamesBtn.classList.add('disabled');
+                gamesBtn.title = "Zaloguj się aby mieć dostęp";
+            } else {
+                gamesBtn.classList.remove('disabled');
+                gamesBtn.title = "";
+            }
+        }
+        
+        // === AUTORYZACJA ===
+        async function login() {
+            if (!db) {
+                alert('Brak połączenia z bazą danych!');
+                return;
+            }
+            
+            const passwordInput = document.getElementById('adminPassword');
+            if (!passwordInput) return;
+            
+            const password = passwordInput.value;
+            
+            // Sprawdź hasło SYSTEMOWE
+            if (password === 'Dev123SP') {
+                const currentDeviceId = getDeviceId();
+                console.log('Twoje Device ID:', currentDeviceId);
+                
+                try {
+                    const devicesDoc = await db.collection('system').doc('devices').get();
+                    
+                    if (devicesDoc.exists) {
+                        const allowedDevices = devicesDoc.data().allowedDevices || [];
+                        
+                        if (allowedDevices.includes(currentDeviceId)) {
+                            currentUserRole = 'dev';
+                            updateUIForRole();
+                            updateMenuForRole();
+                            alert('✅ Zalogowano do panelu systemowego!');
+                            passwordInput.value = '';
+                        } else {
+                            alert('❌ To urządzenie nie ma dostępu systemowego!\n\n' +
+                                  'Twoje Device ID: ' + currentDeviceId + '\n' +
+                                  'Skontaktuj się z administratorem aby dodać to urządzenie.');
+                            passwordInput.value = '';
+                        }
+                    } else {
+                        alert('❌ Brak konfiguracji systemu!');
+                        passwordInput.value = '';
+                    }
+                } catch (error) {
+                    console.error("Błąd sprawdzania urządzenia:", error);
+                    alert('❌ Błąd połączenia z Firebase!\n' + error.message);
+                    passwordInput.value = '';
+                }
+                return;
+            }
+            
+            // Sprawdź dostęp Premium
+            if (password === systemSettings.adminPassword && systemSettings.adminPassword !== '') {
+                if (!systemSettings.adminEnabled) {
+                    alert('❌ Dostęp Premium jest obecnie wyłączony!');
+                    passwordInput.value = '';
+                    return;
+                }
+                currentUserRole = 'admin';
+                updateUIForRole();
+                updateMenuForRole();
+                alert('✅ Zalogowano do konta Premium!');
+                passwordInput.value = '';
+                return;
+            }
+            
+            // Sprawdź dostęp Użytkownika
+            if (password === systemSettings.userPassword && systemSettings.userPassword !== '') {
+                if (!systemSettings.userEnabled) {
+                    alert('❌ Dostęp Użytkownika jest obecnie wyłączony!');
+                    passwordInput.value = '';
+                    return;
+                }
+                currentUserRole = 'user';
+                updateUIForRole();
+                updateMenuForRole();
+                alert('✅ Zalogowano do konta Użytkownika!');
+                passwordInput.value = '';
+                return;
+            }
+            
+            // Jeśli puste - tryb gościa
+            if (password === '') {
+                currentUserRole = 'guest';
+                updateUIForRole();
+                updateMenuForRole();
+                return;
+            }
+            
+            // Nieprawidłowe hasło
+            alert('❌ Nieprawidłowe hasło!');
+            passwordInput.value = '';
+        }
+        
+        function logout() {
+            currentUserRole = 'guest';
+            updateUIForRole();
+            updateMenuForRole();
+            
+            if (currentPage === 'games') {
+                showPage('elo');
+            }
+        }
+        
+        function updateUIForRole() {
+            const loginBox = document.getElementById('loginBox');
+            const adminPanel = document.getElementById('adminPanel');
+            const userPanel = document.getElementById('userPanel');
+            const devPanel = document.getElementById('devPanel');
+            
+            if (loginBox) loginBox.classList.add('hidden');
+            if (adminPanel) adminPanel.classList.add('hidden');
+            if (userPanel) userPanel.classList.add('hidden');
+            if (devPanel) devPanel.classList.add('hidden');
+            
+            if (currentUserRole === 'admin' && adminPanel) {
+                adminPanel.classList.remove('hidden');
+            } else if (currentUserRole === 'user' && userPanel) {
+                userPanel.classList.remove('hidden');
+            } else if (currentUserRole === 'dev' && devPanel) {
+                devPanel.classList.remove('hidden');
+            } else if (loginBox) {
+                loginBox.classList.remove('hidden');
+            }
+            
+            updateAllDisplays();
+            updateRoleStatusDisplay();
+        }
+        
+        // === ŁADOWANIE USTAWIEN SYSTEMU ===
+        function loadSystemSettings() {
+            if (!db) return;
+            
+            if (unsubscribeSettings) unsubscribeSettings();
+            
+            unsubscribeSettings = db.collection('system').doc('settings')
+                .onSnapshot(doc => {
+                    if (doc.exists) {
+                        systemSettings = doc.data();
+                        
+                        // Ustaw domyślne wartości jeśli brak
+                        if (systemSettings.adminEnabled === undefined) systemSettings.adminEnabled = false;
+                        if (systemSettings.userEnabled === undefined) systemSettings.userEnabled = false;
+                        if (!systemSettings.adminPassword) systemSettings.adminPassword = '';
+                        if (!systemSettings.userPassword) systemSettings.userPassword = '';
+                        
+                        console.log('Ustawienia systemowe załadowane:', systemSettings);
+                        updateRoleStatusDisplay();
+                    } else {
+                        console.log('Brak dokumentu settings w Firebase');
+                        // Ustaw domyślne wartości
+                        systemSettings = {
+                            adminEnabled: false,
+                            userEnabled: false,
+                            adminPassword: '',
+                            userPassword: ''
+                        };
+                    }
+                }, error => {
+                    console.error("Błąd ładowania ustawień:", error);
+                    // Ustaw domyślne wartości w przypadku błędu
+                    systemSettings = {
+                        adminEnabled: false,
+                        userEnabled: false,
+                        adminPassword: '',
+                        userPassword: ''
+                    };
+                });
+        }
+        
+        function updateRoleStatusDisplay() {
+            const adminStatus = document.getElementById('adminStatus');
+            const userStatus = document.getElementById('userStatus');
+            const currentAdminPassword = document.getElementById('currentAdminPassword');
+            const currentUserPassword = document.getElementById('currentUserPassword');
+            
+            if (adminStatus) {
+                if (systemSettings.adminEnabled && systemSettings.adminPassword) {
+                    adminStatus.textContent = 'WŁĄCZONY';
+                    adminStatus.className = 'role-status status-enabled';
+                    const toggleBtn = document.querySelector('button[onclick="toggleAdminRole()"]');
+                    if (toggleBtn) toggleBtn.textContent = 'WYŁĄCZ';
+                    if (currentAdminPassword) currentAdminPassword.textContent = systemSettings.adminPassword;
+                } else {
+                    adminStatus.textContent = 'WYŁĄCZONY';
+                    adminStatus.className = 'role-status status-disabled';
+                    const toggleBtn = document.querySelector('button[onclick="toggleAdminRole()"]');
+                    if (toggleBtn) toggleBtn.textContent = 'WŁĄCZ';
+                    if (currentAdminPassword) currentAdminPassword.textContent = systemSettings.adminPassword || 'brak';
+                }
+            }
+            
+            if (userStatus) {
+                if (systemSettings.userEnabled && systemSettings.userPassword) {
+                    userStatus.textContent = 'WŁĄCZONY';
+                    userStatus.className = 'role-status status-enabled';
+                    const toggleBtn = document.querySelector('button[onclick="toggleUserRole()"]');
+                    if (toggleBtn) toggleBtn.textContent = 'WYŁĄCZ';
+                    if (currentUserPassword) currentUserPassword.textContent = systemSettings.userPassword;
+                } else {
+                    userStatus.textContent = 'WYŁĄCZONY';
+                    userStatus.className = 'role-status status-disabled';
+                    const toggleBtn = document.querySelector('button[onclick="toggleUserRole()"]');
+                    if (toggleBtn) toggleBtn.textContent = 'WŁĄCZ';
+                    if (currentUserPassword) currentUserPassword.textContent = systemSettings.userPassword || 'brak';
+                }
+            }
+        }
+        
+        async function toggleAdminRole() {
+            if (currentUserRole !== 'dev') {
+                alert('Tylko dostęp systemowy może zmieniać ustawienia!');
+                return;
+            }
+            
+            const passwordInput = document.getElementById('adminPasswordInput');
+            if (!passwordInput) return;
+            
+            const newPassword = passwordInput.value;
+            const newStatus = !systemSettings.adminEnabled;
+            
+            if (newStatus && (!newPassword || newPassword.length < 3)) {
+                alert('Musisz ustawić hasło (minimum 3 znaki) aby włączyć dostęp Premium!');
+                passwordInput.focus();
+                return;
+            }
+            
+            if (newPassword && newPassword.length > 0) {
+                systemSettings.adminPassword = newPassword;
+            }
+            
+            systemSettings.adminEnabled = newStatus;
+            
+            try {
+                await db.collection('system').doc('settings').update({
+                    adminEnabled: newStatus,
+                    adminPassword: systemSettings.adminPassword,
+                    updated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                passwordInput.value = '';
+                updateRoleStatusDisplay();
+                
+                const statusText = newStatus ? 'włączony' : 'wyłączony';
+                alert(`✅ Dostęp Premium został ${statusText}!`);
+            } catch (error) {
+                alert('Błąd aktualizacji ustawień: ' + error.message);
+            }
+        }
+        
+        async function toggleUserRole() {
+            if (currentUserRole !== 'dev') {
+                alert('Tylko dostęp systemowy może zmieniać ustawienia!');
+                return;
+            }
+            
+            const passwordInput = document.getElementById('userPasswordInput');
+            if (!passwordInput) return;
+            
+            const newPassword = passwordInput.value;
+            const newStatus = !systemSettings.userEnabled;
+            
+            if (newStatus && (!newPassword || newPassword.length < 3)) {
+                alert('Musisz ustawić hasło (minimum 3 znaki) aby włączyć dostęp Użytkownika!');
+                passwordInput.focus();
+                return;
+            }
+            
+            if (newPassword && newPassword.length > 0) {
+                systemSettings.userPassword = newPassword;
+            }
+            
+            systemSettings.userEnabled = newStatus;
+            
+            try {
+                await db.collection('system').doc('settings').update({
+                    userEnabled: newStatus,
+                    userPassword: systemSettings.userPassword,
+                    updated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                passwordInput.value = '';
+                updateRoleStatusDisplay();
+                
+                const statusText = newStatus ? 'włączony' : 'wyłączony';
+                alert(`✅ Dostęp Użytkownika został ${statusText}!`);
+            } catch (error) {
+                alert('Błąd aktualizacji ustawień: ' + error.message);
+            }
+        }
+        
+        // === FORMATOWANIE NAZWISK ===
+        function formatPlayerName(playerName, forGuest = false) {
+            if (!forGuest || currentUserRole !== 'guest') {
+                return playerName;
+            }
+            
+            const parts = playerName.trim().split(' ');
+            
+            if (parts.length === 1) {
+                return playerName;
+            } else if (parts.length >= 2) {
+                const firstName = parts[0];
+                const lastName = parts[parts.length - 1];
+                const lastNameInitial = lastName.charAt(0).toUpperCase();
+                return `${firstName} ${lastNameInitial}.`;
+            }
+            
+            return playerName;
+        }
+        
+        // === OBSŁUGA DANYCH Z FIRESTORE ===
+        function loadData() {
+            if (!db) {
+                console.error('Brak połączenia z Firestore');
+                return;
+            }
+            
+            // Gracze
+            if (unsubscribePlayers) unsubscribePlayers();
+            unsubscribePlayers = db.collection('players')
+                .orderBy('elo', 'desc')
+                .onSnapshot(snapshot => {
+                    players = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        players.push({
+                            id: doc.id,
+                            name: data.name || '',
+                            elo: data.elo || 1500,
+                            code: data.code || '00000',
+                            createdAt: data.createdAt || new Date(),
+                            createdBy: data.createdBy || 'unknown'
+                        });
+                    });
+                    updateAllDisplays();
+                }, error => {
+                    console.error("Błąd ładowania graczy:", error);
+                });
+            
+            // Historia
+            if (unsubscribeHistory) unsubscribeHistory();
+            unsubscribeHistory = db.collection('history')
+                .orderBy('timestamp', 'desc')
+                .limit(10)
+                .onSnapshot(snapshot => {
+                    history = [];
+                    snapshot.forEach(doc => {
+                        history.push(doc.data());
+                    });
+                    updateHistory();
+                }, error => {
+                    console.error("Błąd ładowania historii:", error);
+                });
+            
+            // ZAWSZE ładuj ustawienia (nawet dla gości)
+            loadSystemSettings();
+        }
+        
+        // === OPERACJE NA GRACZACH ===
+        async function addNewPlayer() {
+            if (currentUserRole !== 'admin' && currentUserRole !== 'dev') {
+                alert('Tylko dostęp Premium lub systemowy może dodawać graczy!');
+                return;
+            }
+            
+            if (!db) {
+                alert('Brak połączenia z bazą danych!');
+                return;
+            }
+            
+            const nameInput = document.getElementById('newPlayerName');
+            const eloInput = document.getElementById('newPlayerElo');
+            const codeInput = document.getElementById('newPlayerCode');
+            
+            if (!nameInput || !eloInput || !codeInput) return;
+            
+            const name = nameInput.value.trim();
+            const elo = parseInt(eloInput.value) || 1500;
+            const code = codeInput.value;
+            
+            if (!name) {
+                alert('Wpisz imię gracza!');
+                nameInput.focus();
+                return;
+            }
+            
+            if (!code || code.length !== 5) {
+                alert('Kod musi mieć dokładnie 5 cyfr!');
+                codeInput.focus();
+                return;
+            }
+            
+            if (!/^\d{5}$/.test(code)) {
+                alert('Kod może zawierać tylko cyfry!');
+                codeInput.focus();
+                return;
+            }
+            
+            const existingPlayer = players.find(p => 
+                p.name.toLowerCase() === name.toLowerCase()
+            );
+            
+            if (existingPlayer) {
+                alert(`Gracz "${name}" już istnieje!`);
+                return;
+            }
+            
+            try {
+                await db.collection('players').add({
+                    name: name,
+                    elo: elo,
+                    code: code,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdBy: currentUserRole
+                });
+                
+                nameInput.value = '';
+                eloInput.value = 1500;
+                codeInput.value = '';
+                
+                generateRandomCode();
+                
+                alert(`✅ Dodano gracza: ${name}\nELO: ${elo}\nKod: ${code}`);
+            } catch (error) {
+                alert('Błąd dodawania gracza: ' + error.message);
+            }
+        }
+        
+        async function addNewPlayerDev() {
+            if (currentUserRole !== 'dev') {
+                alert('Tylko dostęp systemowy może dodawać graczy z tego panelu!');
+                return;
+            }
+            
+            if (!db) {
+                alert('Brak połączenia z bazą danych!');
+                return;
+            }
+            
+            const nameInput = document.getElementById('devNewPlayerName');
+            const eloInput = document.getElementById('devNewPlayerElo');
+            const codeInput = document.getElementById('devNewPlayerCode');
+            
+            if (!nameInput || !eloInput || !codeInput) return;
+            
+            const name = nameInput.value.trim();
+            const elo = parseInt(eloInput.value) || 1500;
+            const code = codeInput.value;
+            
+            if (!name) {
+                alert('Wpisz imię gracza!');
+                nameInput.focus();
+                return;
+            }
+            
+            if (!code || code.length !== 5) {
+                alert('Kod musi mieć dokładnie 5 cyfr!');
+                codeInput.focus();
+                return;
+            }
+            
+            if (!/^\d{5}$/.test(code)) {
+                alert('Kod może zawierać tylko cyfry!');
+                codeInput.focus();
+                return;
+            }
+            
+            const existingPlayer = players.find(p => 
+                p.name.toLowerCase() === name.toLowerCase()
+            );
+            
+            if (existingPlayer) {
+                alert(`Gracz "${name}" już istnieje!`);
+                return;
+            }
+            
+            try {
+                await db.collection('players').add({
+                    name: name,
+                    elo: elo,
+                    code: code,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdBy: currentUserRole
+                });
+                
+                nameInput.value = '';
+                eloInput.value = 1500;
+                codeInput.value = '';
+                
+                generateRandomCodeDev();
+                
+                alert(`✅ Dodano gracza: ${name}\nELO: ${elo}\nKod: ${code}`);
+            } catch (error) {
+                alert('Błąd dodawania gracza: ' + error.message);
+            }
+        }
+        
+        async function deletePlayer(playerId) {
+            if (currentUserRole !== 'admin' && currentUserRole !== 'dev') {
+                alert('Tylko dostęp Premium lub systemowy może usuwać graczy!');
+                return;
+            }
+            
+            if (!db) {
+                alert('Brak połączenia z bazą danych!');
+                return;
+            }
+            
+            if (confirm('Czy na pewno chcesz usunąć tego gracza?')) {
+                try {
+                    await db.collection('players').doc(playerId).delete();
+                    alert('Gracz usunięty!');
+                } catch (error) {
+                    alert('Błąd usuwania gracza: ' + error.message);
+                }
+            }
+        }
+        
+        // === ZAMIANA GRACZY ===
+        function swapPlayers() {
+            const selectA = document.getElementById('selectPlayerA');
+            const selectB = document.getElementById('selectPlayerB');
+            const swapBtn = document.getElementById('swapBtn');
+            
+            if (!selectA || !selectB) return;
+            
+            const playerAId = selectA.value;
+            const playerBId = selectB.value;
+            
+            if (!playerAId || !playerBId) {
+                return;
+            }
+            
+            if (playerAId === playerBId) {
+                return;
+            }
+            
+            const temp = playerAId;
+            selectA.value = playerBId;
+            selectB.value = temp;
+            
+            updateButtons();
+            updateChanceDisplay();
+            
+            if (swapBtn) {
+                swapBtn.style.transform = 'rotate(180deg)';
+                swapBtn.style.transition = 'transform 0.3s';
+                
+                setTimeout(() => {
+                    swapBtn.style.transform = 'rotate(0deg)';
+                }, 300);
+            }
+        }
+        
+        // === EVENT LISTENERS DLA SELECTÓW ===
+        function onPlayerSelectChange() {
+            updateButtons();
+            updateChanceDisplay();
+            updateSwapButton();
+        }
+        
+        // === FUNKCJE PRZYCISKÓW MECZU ===
+        function playerAWins() { 
+            const playerA = getSelectedPlayer('A');
+            const playerB = getSelectedPlayer('B');
+            
+            if (!playerA || !playerB) {
+                alert('Wybierz obu graczy!');
+                return;
+            }
+            
+            if (playerA.id === playerB.id) {
+                alert('Wybierz różnych graczy!');
+                return;
+            }
+            
+            pendingMatch = {
+                playerA: playerA,
+                playerB: playerB,
+                scoreA: 1
+            };
+            
+            showCodeModal('A', playerA.name);
+        }
+        
+        function playerBWins() { 
+            const playerA = getSelectedPlayer('A');
+            const playerB = getSelectedPlayer('B');
+            
+            if (!playerA || !playerB) {
+                alert('Wybierz obu graczy!');
+                return;
+            }
+            
+            if (playerA.id === playerB.id) {
+                alert('Wybierz różnych graczy!');
+                return;
+            }
+            
+            pendingMatch = {
+                playerA: playerA,
+                playerB: playerB,
+                scoreA: 0
+            };
+            
+            showCodeModal('A', playerA.name);
+        }
+        
+        function draw() { 
+            const playerA = getSelectedPlayer('A');
+            const playerB = getSelectedPlayer('B');
+            
+            if (!playerA || !playerB) {
+                alert('Wybierz obu graczy!');
+                return;
+            }
+            
+            if (playerA.id === playerB.id) {
+                alert('Wybierz różnych graczy!');
+                return;
+            }
+            
+            pendingMatch = {
+                playerA: playerA,
+                playerB: playerB,
+                scoreA: 0.5
+            };
+            
+            showCodeModal('A', playerA.name);
+        }
+        
+        // === CALCULATE MATCH FINAL ===
+        async function calculateMatchFinal(scoreA, playerA, playerB) {
+            console.log('calculateMatchFinal called:', { scoreA, playerA: playerA.name, playerB: playerB.name });
+            
+            if (!db) {
+                alert('Brak połączenia z bazą danych!');
+                return;
+            }
+            
+            const expectedA = 1 / (1 + Math.pow(10, (playerB.elo - playerA.elo) / 400));
+            const change = Math.round(32 * (scoreA - expectedA));
+            
+            const newEloA = playerA.elo + change;
+            const newEloB = playerB.elo - change;
+            
+            const matchData = {
+                playerA: playerA.name,
+                playerB: playerB.name,
+                playerAId: playerA.id,
+                playerBId: playerB.id,
+                result: scoreA === 1 ? 'A' : scoreA === 0 ? 'B' : 'D',
+                change: change,
+                eloABefore: playerA.elo,
+                eloBBefore: playerB.elo,
+                eloAAfter: newEloA,
+                eloBAfter: newEloB,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                date: new Date().toLocaleString(),
+                playedBy: currentUserRole,
+                verified: true
+            };
+            
+            console.log('Match data to save:', matchData);
+            
+            try {
+                const batch = db.batch();
+                
+                const playerARef = db.collection('players').doc(playerA.id);
+                batch.update(playerARef, { elo: newEloA });
+                
+                const playerBRef = db.collection('players').doc(playerB.id);
+                batch.update(playerBRef, { elo: newEloB });
+                
+                const historyRef = db.collection('history').doc();
+                batch.set(historyRef, matchData);
+                
+                await batch.commit();
+                
+                console.log('✅ Mecz zapisany pomyślnie!');
+                showMatchDetails(playerA, playerB, change, scoreA);
+                
+                setTimeout(() => {
+                    updateAllDisplays();
+                }, 500);
+                
+            } catch (error) {
+                console.error('❌ Błąd zapisywania meczu:', error);
+                
+                if (error.code === 'permission-denied') {
+                    alert('❌ Błąd uprawnień Firebase!\n' +
+                          'Sprawdź czy reguły Firestore pozwalają na zapis.\n' +
+                          'Błąd: ' + error.message);
+                } else {
+                    alert('Błąd zapisywania meczu: ' + error.message);
+                }
+            }
+        }
+        
+        function showMatchDetails(playerA, playerB, change, scoreA) {
+            const resultText = scoreA === 1 ? `${playerA.name} wygrał z ${playerB.name}` :
+                              scoreA === 0 ? `${playerB.name} wygrał z ${playerA.name}` :
+                              `${playerA.name} zremisował z ${playerB.name}`;
+            
+            const changeText = change > 0 ? `+${change}` : change;
+            const message = `
+                ${resultText}
+                
+                ${playerA.name}: ${playerA.elo} → ${playerA.elo + change} (${changeText})
+                ${playerB.name}: ${playerB.elo} → ${playerB.elo - change} (${-change})
+                
+                Data: ${new Date().toLocaleString()}
+                ✅ Mecz zweryfikowany kodami
+            `;
+            
+            alert(message);
+        }
+        
+        // === FUNKCJE POMOCNICZE ===
+        function updateAllDisplays() {
+            updatePlayerSelects();
+            updatePlayersList();
+            updateChanceDisplay();
+            updateSwapButton();
+        }
+        
+        function updateSwapButton() {
+            const selectA = document.getElementById('selectPlayerA');
+            const selectB = document.getElementById('selectPlayerB');
+            const swapBtn = document.getElementById('swapBtn');
+            
+            if (!selectA || !selectB || !swapBtn) return;
+            
+            const playerAId = selectA.value;
+            const playerBId = selectB.value;
+            
+            if (playerAId && playerBId && playerAId !== playerBId) {
+                swapBtn.disabled = false;
+                swapBtn.title = "Zamień graczy miejscami";
+            } else {
+                swapBtn.disabled = true;
+                swapBtn.title = "Wybierz różnych graczy aby zamienić";
+            }
+        }
+        
+        function updatePlayerSelects() {
+            const selectA = document.getElementById('selectPlayerA');
+            const selectB = document.getElementById('selectPlayerB');
+            
+            if (!selectA || !selectB) return;
+            
+            const currentA = selectA.value;
+            const currentB = selectB.value;
+            
+            selectA.innerHTML = '<option value="">Wybierz gracza</option>';
+            selectB.innerHTML = '<option value="">Wybierz gracza</option>';
+            
+            players.forEach(player => {
+                const displayName = formatPlayerName(player.name, true);
+                const option = `<option value="${player.id}">${displayName} (${player.elo})</option>`;
+                selectA.innerHTML += option;
+                selectB.innerHTML += option;
+            });
+            
+            if (currentA && players.some(p => p.id === currentA)) selectA.value = currentA;
+            if (currentB && players.some(p => p.id === currentB)) selectB.value = currentB;
+            
+            updateButtons();
+            updateSwapButton();
+        }
+        
+        function updateButtons() {
+            const playerA = getSelectedPlayer('A');
+            const playerB = getSelectedPlayer('B');
+            const btnA = document.getElementById('btnA');
+            const btnB = document.getElementById('btnB');
+            const btnDraw = document.getElementById('btnDraw');
+            
+            if (btnA) {
+                if (playerA) {
+                    const displayName = formatPlayerName(playerA.name, true);
+                    btnA.textContent = displayName.toUpperCase() + ' WYGRYWA';
+                    btnA.disabled = (currentUserRole === 'guest');
+                } else {
+                    btnA.textContent = 'GRACZ A wygrywa';
+                    btnA.disabled = true;
+                }
+            }
+            
+            if (btnB) {
+                if (playerB) {
+                    const displayName = formatPlayerName(playerB.name, true);
+                    btnB.textContent = displayName.toUpperCase() + ' WYGRYWA';
+                    btnB.disabled = (currentUserRole === 'guest');
+                } else {
+                    btnB.textContent = 'GRACZ B wygrywa';
+                    btnB.disabled = true;
+                }
+            }
+            
+            if (btnDraw) {
+                if (playerA && playerB) {
+                    btnDraw.disabled = (currentUserRole === 'guest');
+                } else {
+                    btnDraw.disabled = true;
+                }
+            }
+        }
+        
+        function getSelectedPlayer(player) {
+            const selectId = player === 'A' ? 'selectPlayerA' : 'selectPlayerB';
+            const select = document.getElementById(selectId);
+            if (!select) return null;
+            
+            const playerId = select.value;
+            return players.find(p => p.id === playerId);
+        }
+        
+        function updateChanceDisplay() {
+            const chanceElement = document.getElementById('chance');
+            if (!chanceElement) return;
+            
+            const playerA = getSelectedPlayer('A');
+            const playerB = getSelectedPlayer('B');
+            
+            if (!playerA || !playerB) {
+                chanceElement.textContent = 'Wybierz obu graczy aby zobaczyć szanse';
+                return;
+            }
+            
+            const expected = 1 / (1 + Math.pow(10, (playerB.elo - playerA.elo) / 400));
+            const percent = Math.round(expected * 100);
+            const displayName = formatPlayerName(playerA.name, true);
+            chanceElement.textContent = `Szansa ${displayName}: ${percent}%`;
+        }
+        
+        function updatePlayersList() {
+            const listElement = document.getElementById('allPlayersList');
+            if (!listElement) return;
+            
+            const sortedPlayers = [...players].sort((a, b) => b.elo - a.elo);
+            
+            if (sortedPlayers.length === 0) {
+                listElement.innerHTML = '<div>Brak graczy. Dostęp Premium lub systemowy może dodać pierwszego!</div>';
+                return;
+            }
+            
+            listElement.innerHTML = sortedPlayers.map((player, index) => {
+                let button = '';
+                
+                if (currentUserRole === 'admin' || currentUserRole === 'dev') {
+                    button = `<button class="delete-btn" onclick="deletePlayer('${player.id}')" title="Usuń gracza">✕</button>`;
+                } else {
+                    button = `<div class="lock-btn" title="Tylko dostęp Premium może usuwać">🔒</div>`;
+                }
+                
+                const displayName = formatPlayerName(player.name, true);
+                const emoji = player.elo > 1500 ? '📈' : player.elo < 1500 ? '📉' : '➖';
+                
+                const codeDisplay = currentUserRole === 'dev' 
+                    ? `<br><small>Kod: <span class="player-code">${player.code}</span></small>`
+                    : '';
+                
+                return `
+                <div class="player-item">
+                    <div style="flex: 1;">
+                        <strong>${index + 1}. <span class="player-name-truncate">${displayName}</span></strong><br>
+                        <small>ELO: ${player.elo} ${emoji}${codeDisplay}</small>
+                    </div>
+                    ${button}
+                </div>
+                `;
+            }).join('');
+        }
+        
+        function updateHistory() {
+            const historyElement = document.getElementById('historyList');
+            if (!historyElement) return;
+            
+            if (history.length === 0) {
+                historyElement.innerHTML = '-';
+                return;
+            }
+            
+            historyElement.innerHTML = history.map(match => {
+                const playerADisplay = formatPlayerName(match.playerA, true);
+                const playerBDisplay = formatPlayerName(match.playerB, true);
+                
+                const verifiedIcon = match.verified ? ' ✅' : '';
+                
+                return `
+                <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #444; font-size: 14px;">
+                    <div><strong>${playerADisplay} vs ${playerBDisplay}${verifiedIcon}</strong></div>
+                    <div>Wynik: ${match.result === 'A' ? `🏆 ${playerADisplay}` : match.result === 'B' ? `🏆 ${playerBDisplay}` : '🤝 Remis'}</div>
+                    <div>Zmiana: ${match.change > 0 ? '+' : ''}${match.change}</div>
+                    <div style="font-size: 12px; color: #aaa;">${match.date}</div>
+                </div>
+                `;
+            }).join('');
+        }
+        
+        // === INICJALIZACJA ===
+        function getDeviceId() {
+            const deviceInfo = navigator.userAgent + navigator.platform + navigator.language;
+            let hash = 0;
+            for (let i = 0; i < deviceInfo.length; i++) {
+                const char = deviceInfo.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return 'device_' + Math.abs(hash).toString(16);
+        }
+        
+        // Start aplikacji po załadowaniu DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Strona załadowana');
+            
+            // Sprawdź czy mamy konfigurację Firebase
+            if (!window.firebaseConfig) {
+                showFirebaseError('Brak konfiguracji Firebase. Utwórz plik firebase-secret.js');
+                return;
+            }
+            
+            // Inicjalizuj aplikację
+            initializeApp();
+            
+            // Dodaj event listeners do selectów
+            setTimeout(() => {
+                const selectPlayerA = document.getElementById('selectPlayerA');
+                const selectPlayerB = document.getElementById('selectPlayerB');
+                
+                if (selectPlayerA) {
+                    selectPlayerA.addEventListener('change', onPlayerSelectChange);
+                }
+                
+                if (selectPlayerB) {
+                    selectPlayerB.addEventListener('change', onPlayerSelectChange);
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
