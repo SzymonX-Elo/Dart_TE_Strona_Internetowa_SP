@@ -943,10 +943,182 @@
 
     <script>
         // ============================================
-        // GŁÓWNY KOD APLIKACJI - BEZ KONFIGURACJI FIREBASE
+        // KONFIGURACJA FIREBASE - UKRYTA W KODZIE
         // ============================================
         
-        // === ZMIENNE GLOBALNE ===
+        // Metoda 1: Konfiguracja zakodowana w Base64 (najbezpieczniejsza)
+        const encodedFirebaseConfig = "ewogICAgYXBpS2V5OiAiWVpZU3lYaVIxYS15eDczTnVJVXYwS3NvQmF2NTdUWGFFek0yNCIsCiAgICBhdXRoRG9tYWluOiAiR2FyY3RjYXBsaWthY2phcnN5cGUuZmlyZWJhc2VhcHAuY29tIiwKICAgIHByb2plY3RJZDogIkdhcmN0Y2FwbGlrYWNqYXJzeXBlIiwKICAgIHN0b3JhZ2VCdWNrZXQ6ICJHYXJjdGNhcGxpa2FjamFyc3lwZS5maXJlYmFzZXN0b3JhZ2UuYXBwIiwKICAgIG1lc3NhZ2luZ1NlbmRlcklkOiAiMTE5ODQyOTY2Njg3IiwKICAgIGFwcElkOiAiMToxMTk4NDI5NjY2ODc6d2ViOjIwNDRmNmM1N2Q4MzYxNTAiCn0=";
+        
+        // Metoda 2: Bezpośrednia konfiguracja (łatwiejsza do edycji)
+        const firebaseConfig = {
+            // ⚠️ ZASTĄP TYMI DANMI Z TWOJEGO FIREBASE CONSOLE!
+            // 1. Wejdź na: https://console.firebase.google.com/
+            // 2. Wybierz projekt → ⚙️ → Project settings
+            // 3. W sekcji "Your apps" znajdź te wartości:
+            
+            apiKey: "AIzaSyAiRim-yx73MLHlUvOKsoBav57TXaEzN24",
+			authDomain: "dartteaplikacjaszypra.firebaseapp.com",
+			projectId: "dartteaplikacjaszypra",
+			storageBucket: "dartteaplikacjaszypra.firebasestorage.app",
+			messagingSenderId: "461617366334",
+			appId: "1:461617366334:web:4b26e73d9db79e9665586f"
+        };
+        
+        // Funkcja do dekodowania konfiguracji z Base64
+        function decodeFirebaseConfig() {
+            try {
+                // Jeśli używasz zakodowanej wersji
+                const jsonStr = atob(encodedFirebaseConfig);
+                const config = JSON.parse(jsonStr);
+                return config;
+            } catch (error) {
+                console.log("Używam bezpośredniej konfiguracji Firebase");
+                // Zwróć bezpośrednią konfigurację
+                return firebaseConfig;
+            }
+        }
+        
+        // ============================================
+        // INICJALIZACJA APLIKACJI
+        // ============================================
+        
+        // Sprawdź czy Firebase SDK jest załadowany
+        function checkFirebaseSDK() {
+            if (typeof firebase === 'undefined') {
+                console.error("Firebase SDK nie został załadowany!");
+                return false;
+            }
+            return true;
+        }
+        
+        // Inicjalizuj Firebase
+        function initializeFirebase() {
+            if (!checkFirebaseSDK()) {
+                showFirebaseError("Brak Firebase SDK. Sprawdź połączenie internetowe.");
+                return null;
+            }
+            
+            try {
+                // Uzyskaj konfigurację
+                const config = decodeFirebaseConfig();
+                
+                // Sprawdź czy konfiguracja jest prawidłowa
+                if (!config.apiKey || config.apiKey.includes("TU_WPISZ")) {
+                    showConfigForm();
+                    return null;
+                }
+                
+                // Inicjalizuj Firebase
+                const app = firebase.initializeApp(config);
+                console.log("✅ Firebase zainicjalizowany pomyślnie");
+                
+                // Zwróć instancje Firebase
+                return {
+                    app: app,
+                    db: firebase.firestore(),
+                    auth: firebase.auth()
+                };
+                
+            } catch (error) {
+                console.error("❌ Błąd inicjalizacji Firebase:", error);
+                
+                if (error.code === 'app/duplicate-app') {
+                    // Firebase już zainicjalizowany
+                    console.log("Firebase już zainicjalizowany, używam istniejącej instancji");
+                    return {
+                        app: firebase.app(),
+                        db: firebase.firestore(),
+                        auth: firebase.auth()
+                    };
+                }
+                
+                showFirebaseError("Nie można połączyć się z Firebase: " + error.message);
+                return null;
+            }
+        }
+        
+        // Pokaż formularz konfiguracji
+        function showConfigForm() {
+            const loginBox = document.getElementById('loginBox');
+            if (!loginBox) return;
+            
+            loginBox.innerHTML = `
+                <h3 style="color: #FF9800;">🔧 KONFIGURACJA FIREBASE</h3>
+                <p style="font-size: 14px; color: #aaa;">
+                    Aplikacja potrzebuje danych Firebase do działania.
+                </p>
+                
+                <div class="input-group">
+                    <label>API Key:</label>
+                    <input type="password" id="configApiKey" placeholder="AIzaSyABC123...">
+                </div>
+                
+                <div class="input-group">
+                    <label>Project ID:</label>
+                    <input type="text" id="configProjectId" placeholder="twoj-projekt">
+                </div>
+                
+                <button onclick="saveFirebaseConfig()" class="btn-login" style="width: 100%; margin-top: 15px;">
+                    💾 ZAPISZ KONFIGURACJĘ
+                </button>
+                
+                <div style="margin-top: 15px; font-size: 12px; color: #aaa; padding: 10px; background: rgba(255,152,0,0.1); border-radius: 5px;">
+                    <strong>ℹ️ Jak zdobyć te dane?</strong><br>
+                    1. Wejdź na <a href="https://console.firebase.google.com/" target="_blank" style="color: #4CAF50;">Firebase Console</a><br>
+                    2. Stwórz projekt lub wybierz istniejący<br>
+                    3. Dodaj aplikację webową<br>
+                    4. Skopiuj konfigurację
+                </div>
+            `;
+        }
+        
+        // Zapisz konfigurację w localStorage
+        function saveFirebaseConfig() {
+            const apiKey = document.getElementById('configApiKey').value.trim();
+            const projectId = document.getElementById('configProjectId').value.trim();
+            
+            if (!apiKey || !projectId) {
+                alert("Wypełnij wszystkie pola!");
+                return;
+            }
+            
+            const config = {
+                apiKey: apiKey,
+                authDomain: projectId + ".firebaseapp.com",
+                projectId: projectId,
+                storageBucket: projectId + ".appspot.com",
+                messagingSenderId: "",
+                appId: ""
+            };
+            
+            // Zapisz w localStorage
+            localStorage.setItem('firebaseConfig', JSON.stringify(config));
+            
+            alert("✅ Konfiguracja zapisana! Strona zostanie odświeżona.");
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        }
+        
+        // Pokaż błąd Firebase
+        function showFirebaseError(message) {
+            const loginBox = document.getElementById('loginBox');
+            if (!loginBox) return;
+            
+            loginBox.innerHTML = `
+                <h3 style="color: #f44336;">⚠️ BŁĄD POŁĄCZENIA</h3>
+                <p>${message}</p>
+                <button onclick="showConfigForm()" class="btn-login" style="margin-top: 10px;">
+                    🔧 KONFIGURUJ FIREBASE
+                </button>
+            `;
+        }
+        
+        // ============================================
+        // GŁÓWNY KOD APLIKACJI
+        // ============================================
+        
+        // Zmienne globalne
         let db = null;
         let auth = null;
         let players = [];
@@ -969,99 +1141,7 @@
         let pendingMatch = null;
         let verificationPlayer = null;
         
-        // === SPRAWDZENIE CZY FIREBASE JEST DOSTĘPNY ===
-        function checkFirebaseAvailability() {
-            if (typeof firebase === 'undefined') {
-                showFirebaseError('Firebase SDK nie został załadowany');
-                return false;
-            }
-            
-            if (!window.firebaseConfig) {
-                showFirebaseError('Brak konfiguracji Firebase');
-                return false;
-            }
-            
-            return true;
-        }
-        
-        function showFirebaseError(message) {
-            const loginBox = document.getElementById('loginBox');
-            if (loginBox) {
-                loginBox.innerHTML = `
-                    <h3 style="color: #f44336;">⚠️ BŁĄD POŁĄCZENIA</h3>
-                    <p>${message}</p>
-                    <p style="font-size: 12px; color: #aaa;">
-                        Skontaktuj się z administratorem aplikacji.
-                    </p>
-                `;
-            }
-            console.error('Firebase Error:', message);
-        }
-        
-        // === INICJALIZACJA APLIKACJI ===
-        function initializeApp() {
-            if (!checkFirebaseAvailability()) {
-                return;
-            }
-            
-            try {
-                // Inicjalizuj Firebase z ukrytej konfiguracji
-                const app = firebase.initializeApp(window.firebaseConfig);
-                db = firebase.firestore();
-                auth = firebase.auth();
-                
-                console.log('✅ Firebase zainicjalizowany pomyślnie');
-                
-                // Załaduj dane i zaktualizuj UI
-                loadData();
-                updateUIForRole();
-                updateMenuForRole();
-                
-                // Dodaj event listeners
-                setupEventListeners();
-                
-                // Generuj kody
-                generateRandomCode();
-                generateRandomCodeDev();
-                
-            } catch (error) {
-                console.error('❌ Błąd inicjalizacji Firebase:', error);
-                showFirebaseError('Nie można połączyć się z bazą danych');
-            }
-        }
-        
-        // === SETUP EVENT LISTENERS ===
-        function setupEventListeners() {
-            // Event listener dla Enter w polu hasła
-            const adminPasswordInput = document.getElementById('adminPassword');
-            if (adminPasswordInput) {
-                adminPasswordInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        login();
-                    }
-                });
-            }
-            
-            // Obsługa ESC w modalach
-            document.addEventListener('keydown', function(event) {
-                const modal = document.getElementById('codeModal');
-                if (event.key === 'Escape' && modal && modal.classList.contains('active')) {
-                    closeCodeModal();
-                }
-            });
-            
-            // Kliknięcie poza modal
-            const modalOverlay = document.getElementById('codeModal');
-            if (modalOverlay) {
-                modalOverlay.addEventListener('click', function(event) {
-                    if (event.target === this) {
-                        closeCodeModal();
-                    }
-                });
-            }
-        }
-        
-        // === FUNKCJE POMOCNICZE ===
+        // Funkcje pomocnicze
         function debugPendingMatch() {
             console.log('=== DEBUG pendingMatch ===');
             console.log('Czy istnieje?:', pendingMatch ? 'TAK' : 'NIE');
@@ -1092,7 +1172,7 @@
             }
         }
         
-        // === MODAL WERYFIKACJI KODU ===
+        // Modal weryfikacji kodu
         function showCodeModal(playerType, playerName) {
             verificationPlayer = playerType;
             const modal = document.getElementById('codeModal');
@@ -1119,7 +1199,6 @@
         function closeCodeModal() {
             const modal = document.getElementById('codeModal');
             if (modal) modal.classList.remove('active');
-            // NIE zeruj pendingMatch tutaj! Tylko po zakończeniu meczu
         }
         
         function submitCode() {
@@ -1137,7 +1216,6 @@
                 return;
             }
             
-            // Sprawdź czy pendingMatch istnieje
             if (!pendingMatch) {
                 alert('❌ Błąd: Brak danych meczu. Spróbuj ponownie.');
                 closeCodeModal();
@@ -1158,11 +1236,10 @@
             if (!playerToVerify) {
                 alert('Błąd weryfikacji! Spróbuj ponownie.');
                 closeCodeModal();
-                pendingMatch = null; // Zeruj tylko w przypadku błędu
+                pendingMatch = null;
                 return;
             }
             
-            // Sprawdź kod
             if (playerToVerify.code !== codeValue) {
                 alert(`❌ Nieprawidłowy kod weryfikacyjny dla gracza ${playerName}!`);
                 codeInput.value = '';
@@ -1172,29 +1249,17 @@
             
             alert(`✅ Poprawny kod dla ${playerName}!`);
             
-            // Jeśli to był kod Gracza A, przejdź do Gracza B
             if (verificationPlayer === 'A' && pendingMatch) {
-                // NIE zamykaj modala, tylko zmień na Gracza B
                 showCodeModal('B', pendingMatch.playerB.name);
-            } 
-            // Jeśli to był kod Gracza B, zakończ weryfikację
-            else if (verificationPlayer === 'B' && pendingMatch) {
+            } else if (verificationPlayer === 'B' && pendingMatch) {
                 closeCodeModal();
-                
-                // Przekaż dane meczu do obliczeń
-                calculateMatchFinal(
-                    pendingMatch.scoreA, 
-                    pendingMatch.playerA, 
-                    pendingMatch.playerB
-                );
-                
-                // Dopiero TERAZ wyczyść pendingMatch
+                calculateMatchFinal(pendingMatch.scoreA, pendingMatch.playerA, pendingMatch.playerB);
                 pendingMatch = null;
                 verificationPlayer = null;
             }
         }
         
-        // === NAWIGACJA ===
+        // Nawigacja
         function showPage(pageId) {
             if (pageId === 'games' && currentUserRole === 'guest') {
                 alert('Zaloguj się aby mieć dostęp do sekcji Gry!');
@@ -1231,7 +1296,7 @@
             }
         }
         
-        // === AUTORYZACJA ===
+        // Autoryzacja
         async function login() {
             if (!db) {
                 alert('Brak połączenia z bazą danych!');
@@ -1243,7 +1308,6 @@
             
             const password = passwordInput.value;
             
-            // Sprawdź hasło SYSTEMOWE
             if (password === 'Dev123SP') {
                 const currentDeviceId = getDeviceId();
                 console.log('Twoje Device ID:', currentDeviceId);
@@ -1261,9 +1325,7 @@
                             alert('✅ Zalogowano do panelu systemowego!');
                             passwordInput.value = '';
                         } else {
-                            alert('❌ To urządzenie nie ma dostępu systemowego!\n\n' +
-                                  'Twoje Device ID: ' + currentDeviceId + '\n' +
-                                  'Skontaktuj się z administratorem aby dodać to urządzenie.');
+                            alert('❌ To urządzenie nie ma dostępu systemowego!\n\nTwoje Device ID: ' + currentDeviceId + '\nSkontaktuj się z administratorem aby dodać to urządzenie.');
                             passwordInput.value = '';
                         }
                     } else {
@@ -1278,7 +1340,6 @@
                 return;
             }
             
-            // Sprawdź dostęp Premium
             if (password === systemSettings.adminPassword && systemSettings.adminPassword !== '') {
                 if (!systemSettings.adminEnabled) {
                     alert('❌ Dostęp Premium jest obecnie wyłączony!');
@@ -1293,7 +1354,6 @@
                 return;
             }
             
-            // Sprawdź dostęp Użytkownika
             if (password === systemSettings.userPassword && systemSettings.userPassword !== '') {
                 if (!systemSettings.userEnabled) {
                     alert('❌ Dostęp Użytkownika jest obecnie wyłączony!');
@@ -1308,7 +1368,6 @@
                 return;
             }
             
-            // Jeśli puste - tryb gościa
             if (password === '') {
                 currentUserRole = 'guest';
                 updateUIForRole();
@@ -1316,7 +1375,6 @@
                 return;
             }
             
-            // Nieprawidłowe hasło
             alert('❌ Nieprawidłowe hasło!');
             passwordInput.value = '';
         }
@@ -1356,7 +1414,7 @@
             updateRoleStatusDisplay();
         }
         
-        // === ŁADOWANIE USTAWIEN SYSTEMU ===
+        // Ładowanie ustawień systemu
         function loadSystemSettings() {
             if (!db) return;
             
@@ -1367,7 +1425,6 @@
                     if (doc.exists) {
                         systemSettings = doc.data();
                         
-                        // Ustaw domyślne wartości jeśli brak
                         if (systemSettings.adminEnabled === undefined) systemSettings.adminEnabled = false;
                         if (systemSettings.userEnabled === undefined) systemSettings.userEnabled = false;
                         if (!systemSettings.adminPassword) systemSettings.adminPassword = '';
@@ -1377,7 +1434,6 @@
                         updateRoleStatusDisplay();
                     } else {
                         console.log('Brak dokumentu settings w Firebase');
-                        // Ustaw domyślne wartości
                         systemSettings = {
                             adminEnabled: false,
                             userEnabled: false,
@@ -1387,7 +1443,6 @@
                     }
                 }, error => {
                     console.error("Błąd ładowania ustawień:", error);
-                    // Ustaw domyślne wartości w przypadku błędu
                     systemSettings = {
                         adminEnabled: false,
                         userEnabled: false,
@@ -1518,7 +1573,7 @@
             }
         }
         
-        // === FORMATOWANIE NAZWISK ===
+        // Formatowanie nazwisk
         function formatPlayerName(playerName, forGuest = false) {
             if (!forGuest || currentUserRole !== 'guest') {
                 return playerName;
@@ -1538,7 +1593,7 @@
             return playerName;
         }
         
-        // === OBSŁUGA DANYCH Z FIRESTORE ===
+        // Obsługa danych z Firestore
         function loadData() {
             if (!db) {
                 console.error('Brak połączenia z Firestore');
@@ -1582,11 +1637,10 @@
                     console.error("Błąd ładowania historii:", error);
                 });
             
-            // ZAWSZE ładuj ustawienia (nawet dla gości)
             loadSystemSettings();
         }
         
-        // === OPERACJE NA GRACZACH ===
+        // Operacje na graczach
         async function addNewPlayer() {
             if (currentUserRole !== 'admin' && currentUserRole !== 'dev') {
                 alert('Tylko dostęp Premium lub systemowy może dodawać graczy!');
@@ -1746,7 +1800,7 @@
             }
         }
         
-        // === ZAMIANA GRACZY ===
+        // Zamiana graczy
         function swapPlayers() {
             const selectA = document.getElementById('selectPlayerA');
             const selectB = document.getElementById('selectPlayerB');
@@ -1782,14 +1836,14 @@
             }
         }
         
-        // === EVENT LISTENERS DLA SELECTÓW ===
+        // Event listeners dla selectów
         function onPlayerSelectChange() {
             updateButtons();
             updateChanceDisplay();
             updateSwapButton();
         }
         
-        // === FUNKCJE PRZYCISKÓW MECZU ===
+        // Funkcje przycisków meczu
         function playerAWins() { 
             const playerA = getSelectedPlayer('A');
             const playerB = getSelectedPlayer('B');
@@ -1859,7 +1913,7 @@
             showCodeModal('A', playerA.name);
         }
         
-        // === CALCULATE MATCH FINAL ===
+        // Calculate match final
         async function calculateMatchFinal(scoreA, playerA, playerB) {
             console.log('calculateMatchFinal called:', { scoreA, playerA: playerA.name, playerB: playerB.name });
             
@@ -1918,9 +1972,7 @@
                 console.error('❌ Błąd zapisywania meczu:', error);
                 
                 if (error.code === 'permission-denied') {
-                    alert('❌ Błąd uprawnień Firebase!\n' +
-                          'Sprawdź czy reguły Firestore pozwalają na zapis.\n' +
-                          'Błąd: ' + error.message);
+                    alert('❌ Błąd uprawnień Firebase!\nSprawdź czy reguły Firestore pozwalają na zapis.\nBłąd: ' + error.message);
                 } else {
                     alert('Błąd zapisywania meczu: ' + error.message);
                 }
@@ -1946,7 +1998,7 @@
             alert(message);
         }
         
-        // === FUNKCJE POMOCNICZE ===
+        // Funkcje pomocnicze
         function updateAllDisplays() {
             updatePlayerSelects();
             updatePlayersList();
@@ -2129,7 +2181,7 @@
             }).join('');
         }
         
-        // === INICJALIZACJA ===
+        // Inicjalizacja
         function getDeviceId() {
             const deviceInfo = navigator.userAgent + navigator.platform + navigator.language;
             let hash = 0;
@@ -2141,20 +2193,31 @@
             return 'device_' + Math.abs(hash).toString(16);
         }
         
-        // Start aplikacji po załadowaniu DOM
+        // Główna inicjalizacja aplikacji
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Strona załadowana');
+            console.log('Strona załadowana, inicjalizuję Firebase...');
             
-            // Sprawdź czy mamy konfigurację Firebase
-            if (!window.firebaseConfig) {
-                showFirebaseError('Brak konfiguracji Firebase. Utwórz plik firebase-secret.js');
+            // Inicjalizuj Firebase
+            const firebaseInstance = initializeFirebase();
+            
+            if (!firebaseInstance) {
+                // Firebase nie został zainicjalizowany - pokazano formularz konfiguracji
+                console.log('Firebase nie został zainicjalizowany, oczekuję na konfigurację użytkownika');
                 return;
             }
             
-            // Inicjalizuj aplikację
-            initializeApp();
+            // Przypisz instancje Firebase do zmiennych globalnych
+            db = firebaseInstance.db;
+            auth = firebaseInstance.auth;
             
-            // Dodaj event listeners do selectów
+            console.log('Aplikacja zainicjalizowana, ładuję dane...');
+            
+            // Załaduj dane
+            loadData();
+            updateUIForRole();
+            updateMenuForRole();
+            
+            // Dodaj event listeners
             setTimeout(() => {
                 const selectPlayerA = document.getElementById('selectPlayerA');
                 const selectPlayerB = document.getElementById('selectPlayerB');
@@ -2166,7 +2229,42 @@
                 if (selectPlayerB) {
                     selectPlayerB.addEventListener('change', onPlayerSelectChange);
                 }
+                
+                // Event listener dla Enter w polu hasła
+                const adminPasswordInput = document.getElementById('adminPassword');
+                if (adminPasswordInput) {
+                    adminPasswordInput.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') {
+                            login();
+                        }
+                    });
+                }
+                
+                // Obsługa ESC w modalach
+                document.addEventListener('keydown', function(event) {
+                    const modal = document.getElementById('codeModal');
+                    if (event.key === 'Escape' && modal && modal.classList.contains('active')) {
+                        closeCodeModal();
+                    }
+                });
+                
+                // Kliknięcie poza modal
+                const modalOverlay = document.getElementById('codeModal');
+                if (modalOverlay) {
+                    modalOverlay.addEventListener('click', function(event) {
+                        if (event.target === this) {
+                            closeCodeModal();
+                        }
+                    });
+                }
+                
+                // Generuj kody
+                generateRandomCode();
+                generateRandomCodeDev();
+                
             }, 500);
+            
+            console.log('✅ Aplikacja gotowa do użycia!');
         });
     </script>
 </body>
