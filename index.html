@@ -404,25 +404,6 @@
             padding-bottom: 10px;
         }
         
-        .close-modal {
-            background: #f44336;
-            color: white;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s;
-        }
-        
-        .close-modal:hover {
-            background: #d32f2f;
-        }
-        
         .code-input {
             letter-spacing: 8px;
             font-size: 24px;
@@ -433,6 +414,22 @@
             border: 2px solid #444;
             border-radius: 8px;
             margin: 10px 0;
+            transition: all 0.3s;
+        }
+        
+        .code-input.error {
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+        
+        .code-input.success {
+            border-color: #4CAF50;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
         
         .player-name-highlight {
@@ -446,7 +443,29 @@
             border-radius: 5px;
         }
         
-        /* STRONA GRY - NOWE STYLE */
+        /* PRZYCISK ANULUJ - WYŚRODKOWANY */
+        .cancel-btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .btn-cancel-modal {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .btn-cancel-modal:hover {
+            background: #d32f2f;
+        }
+        
+        /* STRONA GRY */
         .games-page {
             padding: 15px;
         }
@@ -974,11 +993,12 @@
             align-items: center;
             border-left: 5px solid #4CAF50;
             transition: all 0.3s ease;
+            flex-wrap: wrap;
         }
         
         /* SPECJALNE KOLORY DLA RANG 1 I 9 */
         .rank-1 {
-            border-left-color: #2196F3 !important; /* Niebieski dla rangi 1 */
+            border-left-color: #2196F3 !important;
         }
         
         .rank-1 .rank-number {
@@ -990,7 +1010,7 @@
         }
         
         .rank-9 {
-            border-left-color: #F44336 !important; /* CZERWONY dla rangi 9 */
+            border-left-color: #F44336 !important;
         }
         
         .rank-9 .rank-number {
@@ -1035,6 +1055,7 @@
             margin-right: 15px;
             border: 2px solid #444;
             overflow: hidden;
+            position: relative;
         }
         
         @media (max-width: 480px) {
@@ -1045,11 +1066,14 @@
             }
         }
         
-        /* Obrazek - placeholder */
+        /* Obrazek */
         .rank-image {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
         /* Informacje o randze */
@@ -1102,7 +1126,6 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            border: 1px solid #444;
         }
         
         .player-on-rank-elo {
@@ -1193,7 +1216,7 @@
             border-color: #F44336 !important;
         }
         
-        /* Strona osiągnięć - ZMIENIONE: osiągnięcia obok zdjęć */
+        /* Strona osiągnięć */
         .achievements-page, .seasons-page, .new-season-page {
             padding: 15px;
             max-width: 800px;
@@ -1215,39 +1238,66 @@
         
         .season-container {
             border-left: 5px solid #2196F3;
+            display: block;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .season-container:hover {
+            border-left-color: #4CAF50;
+            background: #333;
+        }
+        
+        .season-container.expanded {
+            border-left-color: #FF9800;
+            background: #2d2d2d;
+            margin-bottom: 20px;
+            padding: 25px;
         }
         
         .new-season-form {
             border-left: 5px solid #9C27B0;
-            display: block; /* ZMIENIONE: z powrotem na block */
+            display: block;
         }
         
+        /* Kontener obrazka osiągnięcia */
         .achievement-image-container {
             width: 70px;
             height: 70px;
-            background: #1a1a1a;
+            background: #7bdbff !important;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            margin-right: 20px; /* ZWIĘKSZONA PRZESTRZEŃ MIĘDZY ZDJĘCIEM A NAZWĄ */
+            margin-right: 20px;
             border: 2px solid #444;
             overflow: hidden;
+            position: relative;
         }
         
         @media (max-width: 480px) {
             .achievement-image-container {
                 width: 50px;
                 height: 50px;
-                margin-right: 15px; /* ZACHOWUJEMY WIĘKSZĄ PRZESTRZEŃ NA MOBILNYCH */
+                margin-right: 15px;
             }
         }
         
-        /* NOWE: Kontener dla nazwy i opisu osiągnięcia */
+        /* Obrazek osiągnięcia */
+        .achievement-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Kontener dla nazwy i opisu osiągnięcia */
         .achievement-text-container {
             flex: 1;
-            min-width: 0; /* Pozwala na responsywność */
+            min-width: 0;
         }
         
         .achievement-name, .season-name-in-list {
@@ -1260,6 +1310,7 @@
         .season-name-in-list {
             color: #2196F3;
             font-size: 18px;
+            margin-top: 0;
         }
         
         .achievement-description, .season-details {
@@ -1268,8 +1319,52 @@
             line-height: 1.4;
         }
         
+        /* Licznik meczy w sezonie */
+        .matches-counter {
+            display: inline-block;
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        /* ROZSZERZONY WIDOK SEZONU */
+        .season-expanded-content {
+            display: none;
+            margin-top: 20px;
+            border-top: 1px solid #444;
+            padding-top: 20px;
+        }
+        
+        .season-expanded-content.show {
+            display: block;
+        }
+        
+        .season-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .season-stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         .season-podium {
-            margin-top: 15px;
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            width: 100%;
+        }
+        
+        .season-player-ranking {
             padding: 15px;
             background: #1a1a1a;
             border-radius: 8px;
@@ -1283,6 +1378,20 @@
             padding: 10px;
             background: #2d2d2d;
             border-radius: 5px;
+        }
+        
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: #2d2d2d;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .ranking-item:nth-child(odd) {
+            background: #333;
         }
         
         .podium-place {
@@ -1311,6 +1420,193 @@
             background: #CD7F32 !important;
         }
         
+        .ranking-place {
+            width: 25px;
+            height: 25px;
+            background: #444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+        
+        .ranking-place-1 {
+            background: #FFD700 !important;
+            color: #000;
+        }
+        
+        .ranking-place-2 {
+            background: #C0C0C0 !important;
+        }
+        
+        .ranking-place-3 {
+            background: #CD7F32 !important;
+        }
+        
+        .achievements-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 8px;
+        }
+        
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #2d2d2d;
+            border-radius: 5px;
+        }
+        
+        .achievement-item-image {
+            width: 40px;
+            height: 40px;
+            background: #7bdbff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 2px solid #444;
+        }
+        
+        .achievement-item-image img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .ranks-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 8px;
+        }
+        
+        .season-rank-item {
+            background: #2d2d2d;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-left: 5px solid #4CAF50;
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        
+        .season-rank-item.rank-1 {
+            border-left-color: #2196F3;
+        }
+        
+        .season-rank-item.rank-9 {
+            border-left-color: #F44336;
+        }
+        
+        .season-rank-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-basis: 100%;
+        }
+        
+        .season-rank-number {
+            width: 35px;
+            height: 35px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .season-rank-item.rank-1 .season-rank-number {
+            background: #2196F3;
+        }
+        
+        .season-rank-item.rank-9 .season-rank-number {
+            background: #F44336;
+        }
+        
+        .season-rank-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .season-rank-item.rank-1 .season-rank-name {
+            color: #2196F3;
+        }
+        
+        .season-rank-item.rank-9 .season-rank-name {
+            color: #F44336;
+        }
+        
+        .season-rank-elo {
+            font-size: 12px;
+            color: #aaa;
+            margin-left: auto;
+        }
+        
+        .season-rank-image-container {
+            width: 60px;
+            height: 60px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 15px;
+            border: 2px solid #444;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .season-rank-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .season-rank-players {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            flex-basis: calc(100% - 75px);
+        }
+        
+        .season-rank-player {
+            background: #3a3a3a;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .season-rank-player-elo {
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 11px;
+            background: rgba(76, 175, 80, 0.2);
+            padding: 1px 5px;
+            border-radius: 8px;
+        }
+        
         .back-to-ranks-btn {
             display: block;
             margin: 30px auto 0 auto;
@@ -1330,7 +1626,7 @@
             background: #4CAF50;
         }
         
-        /* Formularz nowego sezonu - POPRAWIAMY UKŁAD */
+        /* Formularz nowego sezonu */
         .elo-thresholds {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -1452,6 +1748,209 @@
             color: #4CAF50;
             margin-bottom: 5px;
         }
+        
+        /* ===== NOWY SYSTEM PAGINACJI (STRONICOWANIA) SEZONÓW ===== */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            padding: 15px;
+            background: #2d2d2d;
+            border-radius: 10px;
+            gap: 15px;
+        }
+        
+        .page-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .page-indicator {
+            background: #333;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .page-indicator:hover {
+            background: #3a3a3a;
+            border-color: #4CAF50;
+        }
+        
+        .pagination-btn {
+            background: #333;
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+        
+        .pagination-btn:hover {
+            background: #4CAF50;
+        }
+        
+        .pagination-btn:disabled {
+            background: #444;
+            color: #666;
+            cursor: not-allowed;
+        }
+        
+        .pagination-btn:disabled:hover {
+            background: #444;
+        }
+        
+        /* MODAL DO WYBORU STRONY - POPRAWIONY DLA PRZEWIJANIA */
+        .page-selector-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            padding: 20px;
+        }
+        
+        .page-selector-modal.active {
+            display: flex;
+        }
+        
+        .page-selector-content {
+            background: #2d2d2d;
+            padding: 25px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid #2196F3;
+            text-align: center;
+        }
+        
+        .page-selector-title {
+            font-size: 20px;
+            color: #2196F3;
+            margin-bottom: 20px;
+        }
+        
+        /* NOWE STYLE DLA PRZEWIJANEJ LISTY STRON */
+        .page-list-container {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+        }
+        
+        .page-list-scroll {
+            height: 100%;
+            overflow-y: auto;
+            padding: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #4CAF50 #333;
+        }
+        
+        /* Stylizacja scrollbara dla przeglądarek WebKit */
+        .page-list-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .page-list-scroll::-webkit-scrollbar-track {
+            background: #333;
+            border-radius: 4px;
+        }
+        
+        .page-list-scroll::-webkit-scrollbar-thumb {
+            background: #4CAF50;
+            border-radius: 4px;
+        }
+        
+        .page-list-scroll::-webkit-scrollbar-thumb:hover {
+            background: #3d8b40;
+        }
+        
+        .page-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .page-number-btn {
+            background: #333;
+            border: 2px solid #444;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .page-number-btn:hover {
+            background: #3a3a3a;
+            border-color: #4CAF50;
+        }
+        
+        .page-number-btn.active {
+            background: #2196F3;
+            border-color: #2196F3;
+            font-weight: bold;
+        }
+        
+        .page-selector-close {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .page-selector-close:hover {
+            background: #d32f2f;
+        }
+        
+        @media (max-width: 480px) {
+            .pagination-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .page-info {
+                order: 2;
+            }
+            
+            .pagination-buttons {
+                order: 1;
+                display: flex;
+                gap: 10px;
+            }
+            
+            .page-list-container {
+                height: 200px;
+            }
+        }
     </style>
     
     <!-- Firebase SDK -->
@@ -1460,7 +1959,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-    <!-- MENU NAWIGACYJNE - ZOPTYMALIZOWANE DLA TELEFONU -->
+    <!-- MENU NAWIGACYJNE -->
     <div class="nav-menu">
         <button class="nav-btn active" onclick="showPage('elo')">
             <span class="nav-icon">🎯</span>
@@ -1485,7 +1984,6 @@
         <div class="modal">
             <div class="modal-header">
                 <h3 style="margin: 0; color: #4CAF50;">🔒 WERYFIKACJI KODU</h3>
-                <button class="close-modal" onclick="closeCodeModal()">✕</button>
             </div>
             
             <div id="modalMessage" style="text-align: center; margin-bottom: 15px;">
@@ -1493,7 +1991,7 @@
             </div>
             
             <div class="player-name-highlight" id="modalPlayerName">
-                <!-- Tu pojawi się nazwa gracza -->
+                <!-- Tu pojawi się nazwa graczy -->
             </div>
             
             <div class="input-group">
@@ -1503,12 +2001,12 @@
                        class="code-input" 
                        maxlength="5" 
                        placeholder="00000"
-                       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5)">
+                       oninput="handleCodeInput(this)">
+                <div id="codeError" style="color: #f44336; text-align: center; margin-top: 5px; font-size: 12px; min-height: 18px;"></div>
             </div>
             
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="btn-logout" onclick="closeCodeModal()" style="flex: 1;">ANULUJ</button>
-                <button class="btn-win1" onclick="submitCode()" style="flex: 2;">ZATWIERDŹ KOD</button>
+            <div class="cancel-btn-container">
+                <button class="btn-cancel-modal" onclick="closeCodeModal()">ANULUJ</button>
             </div>
             
             <div style="text-align: center; margin-top: 15px; font-size: 12px; color: #aaa;">
@@ -1517,9 +2015,29 @@
         </div>
     </div>
 
+    <!-- MODAL DO WYBORU STRONY SEZONÓW - ZAKTUALIZOWANY -->
+    <div id="pageSelectorModal" class="page-selector-modal">
+        <div class="page-selector-content">
+            <div class="page-selector-title">📄 Wybierz stronę sezonów</div>
+            
+            <div class="page-list-container">
+                <div id="pageSelectorList" class="page-list-scroll">
+                    <!-- Lista przycisków stron pojawi się tutaj -->
+                </div>
+            </div>
+            
+            <div id="pageSelectorInfo" style="margin-bottom: 15px; color: #aaa; font-size: 13px;">
+                <!-- Informacja o ilości stron -->
+            </div>
+            
+            <button class="page-selector-close" onclick="closePageSelectorModal()">Zamknij</button>
+        </div>
+    </div>
+
     <!-- STRONA KALKULATORA ELO -->
     <div class="container page active" id="eloPage">
-        <h1>🎯 KALKULATOR ELO DART</h1>
+        <!-- LOGO STRONY - USUNIĘTE ZGODNIE Z ŻYCZENIEM -->
+        <h1 style="margin-top: 10px;">🎯 KALKULATOR ELO DART</h1>
         
         <!-- Panel logowania -->
         <div class="login-box" id="loginBox">
@@ -1537,7 +2055,7 @@
             </div>
         </div>
         
-        <!-- Admin Panel (ukryty domyślnie) -->
+        <!-- Admin Panel -->
         <div class="admin-panel hidden" id="adminPanel">
             <h3 style="margin-top: 0;">👑 KONTO PREMIUM <span class="role-badge admin-badge">PREMIUM</span></h3>
             
@@ -1575,13 +2093,13 @@
             </div>
         </div>
         
-        <!-- User Panel (ukryty domyślnie) -->
+        <!-- User Panel -->
         <div class="user-panel hidden" id="userPanel">
             <h3 style="margin-top: 0;">👤 KONTO UŻYTKOWNIKA <span class="role-badge user-badge">USER</span></h3>
             <button class="btn-logout" onclick="logout()" style="width: 100%;">WYLOGUJ</button>
         </div>
         
-        <!-- Dev Panel (ukryty domyślnie) -->
+        <!-- Dev Panel -->
         <div class="dev-panel hidden" id="devPanel">
             <h3 style="margin-top: 0;">⚙️ PANEL SYSTEMOWY <span class="role-badge dev-badge">SYSTEM</span></h3>
             
@@ -1662,17 +2180,6 @@
                     <button class="btn-logout" onclick="logout()" style="flex: 1;">WYLOGUJ</button>
                 </div>
             </div>
-            
-            <!-- DIAGNOSTYKA -->
-            <div style="margin-top: 20px; padding: 15px; background: rgba(255,0,0,0.1); border-radius: 8px; border: 1px solid #f44336;">
-                <h4 style="margin-top: 0; color: #f44336;">🛠️ DIAGNOSTYKA</h4>
-                <button onclick="debugSeasons()" style="background: #f44336; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; width: 100%;">
-                    🔍 Sprawdź sezony w Firebase
-                </button>
-                <small style="color: #aaa; display: block; margin-top: 5px;">
-                    Sprawdź co jest zapisane w bazie danych (otwórz konsolę F12)
-                </small>
-            </div>
         </div>
         
         <!-- Wybór graczy do meczu -->
@@ -1706,7 +2213,7 @@
             <div class="buttons">
                 <button class="btn-win1" onclick="playerAWins()" id="btnA">GRACZ A wygrywa</button>
                 <button class="btn-draw" onclick="draw()" id="btnDraw">REMIS</button>
-                <button class="btn-win2" onclick="playerBWins()" id="btnB">GRACZ B wygrywa</button>
+                <button class="btn-win2" onclick="playerBWins()" id="btnB">GRACz B wygrywa</button>
             </div>
             
             <div style="text-align: center; margin-top: 10px; color: #aaa; font-size: 12px;">
@@ -1714,15 +2221,15 @@
             </div>
         </div>
         
-        <!-- Lista wszystkich graczy (ZMIENIONA NAZWA) -->
+        <!-- Lista wszystkich graczy -->
         <div class="players-list">
-            <h3 style="margin-top: 0;">🏆 SEZONOWY RANKING GRACZY</h3>
+            <h3 style="margin-top: 0;" id="rankingTitle">🏆 SEZONOWY RANKING GRACZY</h3>
             <div id="allPlayersList">Ładowanie z chmury...</div>
         </div>
         
         <!-- Historia zmian -->
         <div class="history">
-            <h3 style="margin-top: 0;">📜 OSTATNIE MECZE</h3>
+            <h3 style="margin-top: 0;" id="historyTitle">📜 OSTATNIE MECZE W SEZONIE</h3>
             <div id="historyList">-</div>
         </div>
         
@@ -1740,7 +2247,7 @@
     <!-- STRONA GŁÓWNA GIER -->
     <div class="container page" id="gamesPage">
         <div class="games-page">
-            <h1>🎮 GRY I TURNIEJE</h1>
+            <h1 style="margin-top: 10px;">🎮 GRY I TURNIEJE</h1>
             
             <div style="text-align: center; margin-bottom: 30px;">
                 <p style="color: #aaa; font-size: 16px;">Wybierz tryb gry</p>
@@ -1760,7 +2267,7 @@
                     <div class="game-mode-icon">⚔️</div>
                     <div class="game-mode-title">Cricket</div>
                     <div class="game-mode-description">
-                        (Wkrótce) Popularna gra w krykieta darta. Zamknij wszystkie numery 15-20 i bullseye.
+                        (Wkrótce) Popularna gra w kryketa darta. Zamknij wszystkie numery 15-20 i bullseye.
                     </div>
                 </div>
                 
@@ -1993,7 +2500,7 @@
                             ✏️ Ręcznie (wybierz wynik samodzielnie)
                         </button>
                         <p style="font-size: 13px; color: #aaa;">
-                            Sam wybierzesz kto wygrał lub czy był remis w kalkulatorze ELO.
+                            Sam wybierzesz kto wygrał lub czy był remis w kalkulatora ELO.
                         </p>
                     </div>
                 </div>
@@ -2013,7 +2520,7 @@
     <!-- STRONA RANG -->
     <div class="container page" id="ranksPage">
         <div class="ranks-page">
-            <h1>⭐ SYSTEM RANG</h1>
+            <h1 style="margin-top: 10px;">⭐ SYSTEM RANG</h1>
             
             <!-- Status sezonu -->
             <div id="seasonStatus" class="season-status off-season">
@@ -2040,7 +2547,7 @@
                     🚀 Zacznij nowy sezon
                 </button>
                 
-                <!-- NOWY: Przycisk tylko dla deva do zakończenia sezonu -->
+                <!-- Przycisk tylko dla deva do zakończenia sezonu -->
                 <button id="endSeasonBtn" class="ranks-footer-btn dev-end-season-btn hidden" onclick="endSeasonDev()">
                     ⏹️ Zakończ sezon (SYSTEM)
                 </button>
@@ -2048,7 +2555,7 @@
         </div>
     </div>
 
-    <!-- STRONA OSIĄGNIĘĆ (UKRYTA, TYLKO Z POZIOMU RANG) -->
+    <!-- STRONA OSIĄGNIĘĆ -->
     <div class="container page" id="achievementsPage">
         <div class="achievements-page">
             <h1>🏆 OSIĄGNIĘCIA</h1>
@@ -2124,6 +2631,27 @@
                 Ładowanie sezonów...
             </div>
             
+            <!-- NOWY SYSTEM PAGINACJI (STRONICOWANIA) -->
+            <div id="seasonsPagination" class="pagination-container hidden">
+                <div class="pagination-buttons">
+                    <button class="pagination-btn" onclick="changeSeasonsPage(-1)" id="prevPageBtn" disabled>
+                        ←
+                    </button>
+                </div>
+                
+                <div class="page-info">
+                    <div class="page-indicator" onclick="openPageSelectorModal()" id="pageIndicator">
+                        1 z 1
+                    </div>
+                </div>
+                
+                <div class="pagination-buttons">
+                    <button class="pagination-btn" onclick="changeSeasonsPage(1)" id="nextPageBtn" disabled>
+                        →
+                    </button>
+                </div>
+            </div>
+            
             <button class="back-to-ranks-btn" onclick="showPage('ranks')">
                 ← Powrót do Rang
             </button>
@@ -2133,7 +2661,7 @@
     <!-- STRONA INFO -->
     <div class="container page" id="infoPage">
         <div class="info-page">
-            <h1>ℹ️ INFORMACJE</h1>
+            <h1 style="margin-top: 10px;">ℹ️ INFORMACJE</h1>
             
             <div class="info-box">
                 <h4 style="margin-top: 0; color: #4CAF50;">🔐 SYSTEM WERYFIKACJI KODÓW</h4>
@@ -2181,7 +2709,7 @@
                 <p>System sezonów pozwala na rozgrywanie okresowych rozgrywek z resetem rankingów.</p>
                 <ul style="padding-left: 20px;">
                     <li><strong>Sezony:</strong> Okresowe rozgrywki z własnymi progami ELO</li>
-                    <li><strong>Reset ELO:</strong> Po sezonie wszyscy gracze wracają do 1500 ELO</li>
+                    <li><strong>Reset ELO:</strong> Po sezonie wszyscy graczy wracają do 1500 ELO</li>
                     <li><strong>Osiągnięcia:</strong> Specjalne nagrody za wyniki w sezonie</li>
                     <li><strong>Archiwum:</strong> Historia wszystkich sezonów</li>
                 </ul>
@@ -2205,15 +2733,15 @@
         // KONFIGURACJA FIREBASE
         // ============================================
         
-        const firebaseConfig = {
-			apiKey: "AIzaSyAiRim-yx73MLHlUvOKsoBav57TXaEzN24",
-			authDomain: "dartteaplikacjaszypra.firebaseapp.com",
+         const firebaseConfig = {
+            apiKey: "AIzaSyAiRim-yx73MLHlUvOKsoBav57TXaEzN24",
+            authDomain: "dartteaplikacjaszypra.firebaseapp.com",
             projectId: "dartteaplikacjaszypra",
             storageBucket: "dartteaplikacjaszypra.firebasestorage.app",
             messagingSenderId: "461617366334",
             appId: "1:461617366334:web:4b26e73d9db79e9665586f"
         };
-        
+
         // ============================================
         // INICJALIZACJA APLIKACJI
         // ============================================
@@ -2236,17 +2764,19 @@
         }
         
         // ============================================
-        // GŁÓWNY KOD APLIKACJI - POŁĄCZONY
+        // GŁÓWNY KOD APLIKACJI - KOMPLETNY
         // ============================================
         
-        // Zmienne globalne z pierwszego kodu
+        // Zmienne globalne
         let db = null;
         let auth = null;
         let players = [];
         let history = [];
+        let offSeasonHistory = [];
         let currentUserRole = 'guest';
         let unsubscribePlayers = null;
         let unsubscribeHistory = null;
+        let unsubscribeOffSeasonHistory = null;
         let unsubscribeSettings = null;
         let currentPage = 'elo';
         
@@ -2260,11 +2790,28 @@
         
         // Zmienne do weryfikacji kodu
         let pendingMatch = null;
-        let verificationPlayer = null;
+        let verificationState = {
+            currentPlayer: null,
+            playerName: '',
+            playerCode: '',
+            verifiedPlayerA: false,
+            verifiedPlayerB: false
+        };
         
         // Zmienne z drugiego kodu (sezony)
         let currentSeason = null;
         let previousSeasons = [];
+        let expandedSeasonId = null;
+        
+        // NOWE ZMIENNE DO PAGINACJI SEZONÓW
+        let seasonsPagination = {
+            currentPage: 1,
+            totalPages: 1,
+            itemsPerPage: 10,
+            allSeasons: [],  // Wszystkie zakończone sezony
+            // ZMIANA: Nowy system przechowywania sezonów - ostatnia strona pełna, pierwsza częściowo
+            seasonsPerPageReversed: true // Flaga dla odwróconej paginacji
+        };
         
         // Zmienne do gry 501
         let currentGame = {
@@ -2307,61 +2854,409 @@
         let currentMultiplier = 1;
         let gameHistory = [];
         
-        // Definicja rang (możesz tu zmienić progi ELO)
-        const ranks = [
-            { id: 1, name: "Bez rangi", minElo: 0, maxElo: 1000, image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQALiXZw7h0uRZWF1EomXOK8AaF8EmsHhY61OddiwuGKs8o?e=q13UFF" },
-            { id: 2, name: "Rekrut", minElo: 1001, maxElo: 1200, image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQCGYc1plt8GTopuGjsjDwChAS_AezLQp5kXt4U1G1e-L4s?e=mPuRI8" },
-            { id: 3, name: "Nowicjusz", minElo: 1201, maxElo: 1400, image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQB1Ctp11cJZSqdeuI2iVB1bAW9FcbYvB2FTnMw5XYamkv0?e=0eP6hX" },
-            { id: 4, name: "Amator", minElo: 1401, maxElo: 1600, image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQB24NZyOFr_RZs7SniyVz0nAc5SqOUCzWM_rgL7rbfKdCY?e=4cSFa8" },
-            { id: 5, name: "Srebro", minElo: 1601, maxElo: 1800, image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQB3SDRftdVoSY0hMKY-3cJpAUG4oVh9xskQAWAelPSGGWI?e=BKGPvu" },
-            { id: 6, name: "Złoto", minElo: 1801, maxElo: 2000, image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQAjklxp-5GESpMSWnipwxtRAXGp0MvG3RiKZkNK-yFdfyM?e=clcRsg" },
-            { id: 7, name: "Diamentowa liga", minElo: 2001, maxElo: 2200, image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQBgwUKEtWzCQbQLHEONquzEAXSnpFHMYSNbs4V4qGVKvKU?e=60zdVR" },
-            { id: 8, name: "Liga królewska", minElo: 2201, maxElo: 2400, image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQCEDY1-tPATRryWICgZGD-0AXDU6mANVgDZDmN3tGvi_0M?e=1FD9di" },
-            { id: 9, name: "Liga mistrzowska", minElo: 2401, maxElo: 9999, image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQCuidoPh_oAQqUrHqlr0j9FAVwfzw6uhPpdA8vFa4BkS9s?e=gZW8Wv" }
-        ];
+        // ============================================
+        // NOWY SYSTEM WERYFIKACJI KODÓW
+        // ============================================
         
-        // Definicja osiągnięć
-        const achievements = [
-            { 
-                id: 1, 
-                name: "None", 
-                description: "Jest to informacja, że użytkownik nie posiada żadnych osiągnięć.",
-                image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQBdOvsesaR-RJQn_ILo4nQwAXacX-w5ljD6Zzt6dQkcWRE?e=SevlG1" 
-            },
-            { 
-                id: 2, 
-                name: "Top 3 of season", 
-                description: "To osiągnięcie zdobywa się za uzyskanie trzeciego miejsca w sezonowym rankingu graczy. Jeżeli jednak dodatkowo użytkownik będzie miał rangę 'Liga mistrzowska', zamiast tego osiągnięcia dostaje osiągnięcie 'RANK9 of season'.",
-                image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQBZyvFXA1ylSrgOHdPXdHOBATxSl8lA1dXfvYloLtQ135k?e=FYBAnS" 
-            },
-            { 
-                id: 3, 
-                name: "Top 2 of season", 
-                description: "Użytkownik może otrzymać tą rangę za uzyskanie drugiego miejsca w sezonowym rankingu graczy. Jeżeli jednak dodatkowo użytkownik będzie miał rangę 'Liga mistrzowska', zamiast tego osiągnięcia dostaje osiągnięcie 'RANK9 of season'.",
-                image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQD8e67-vc-ZSZH5D29YYaLBAdTCjN_tfedbVPLcZeZuVVA?e=DfhDDC" 
-            },
-            { 
-                id: 4, 
-                name: "Top 1 of season", 
-                description: "Gdy użytkownik osiągnie pierwsze miejsce w sezonowym rankingu graczy, to osiągnięcie zostaje przypisane do jego konta. Jeżeli jednak dodatkowo użytkownik będzie miał rangę 'Liga mistrzowska', zamiast tego osiągnięcia dostaje osiągnięcie 'RANK9 of season'.",
-                image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQB2jHZaKWqAQJ0WLoVRSyF1AQrW2yy3LXFtlYOrAwIWoU4?e=Y9YwwC" 
-            },
-            { 
-                id: 5, 
-                name: "RANK9 of season", 
-                description: "Osiągnięcie to można zdobyć za ukończenie sezonu z rangą dziewiątą.",
-                image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQBoTZrcR9COT5pMtQev8yMYARhO_gu54bs-ccPH8dz7KmM?e=eoOibY" 
-            },
-            { 
-                id: 6, 
-                name: "Top 1 of season [RANK9]", 
-                description: "Jeżeli jesteś pierwszy w sezonowym rankingu graczy oraz zakończyłeś sezon z rangą dziewiątą, to omawiane osiągnięcie jest twoje!",
-                image: "https://1drv.ms/i/c/98fdba83fc4aac98/IQBSZHId-edhRqWj1e8zNLb8AajoYpPkzZFKiDMHXGHsCdA?e=UyRPxe" 
+        function handleCodeInput(inputElement) {
+            const codeError = document.getElementById('codeError');
+            if (codeError) codeError.textContent = '';
+            
+            inputElement.value = inputElement.value.replace(/[^0-9]/g, '').slice(0, 5);
+            
+            if (inputElement.value.length === 5) {
+                verifyCode(inputElement.value);
             }
-        ];
+        }
+        
+        function verifyCode(enteredCode) {
+            if (!pendingMatch || !verificationState.currentPlayer) {
+                closeCodeModal();
+                return;
+            }
+            
+            let playerToVerify = null;
+            let isCorrect = false;
+            
+            if (verificationState.currentPlayer === 'A') {
+                playerToVerify = pendingMatch.playerA;
+                isCorrect = (enteredCode === playerToVerify.code);
+            } else {
+                playerToVerify = pendingMatch.playerB;
+                isCorrect = (enteredCode === playerToVerify.code);
+            }
+            
+            if (!isCorrect) {
+                const codeError = document.getElementById('codeError');
+                if (codeError) {
+                    codeError.textContent = '❌ Nieprawidłowy kod!';
+                    codeError.style.color = '#f44336';
+                }
+                
+                const codeInput = document.getElementById('codeInput');
+                if (codeInput) {
+                    codeInput.classList.add('error');
+                    codeInput.classList.remove('success');
+                    
+                    setTimeout(() => {
+                        codeInput.classList.remove('error');
+                        codeInput.value = '';
+                        codeInput.focus();
+                    }, 500);
+                }
+                return;
+            }
+            
+            if (verificationState.currentPlayer === 'A') {
+                verificationState.verifiedPlayerA = true;
+                console.log('✅ Kod gracza A poprawny');
+            } else {
+                verificationState.verifiedPlayerB = true;
+                console.log('✅ Kod gracza B poprawny');
+            }
+            
+            const codeError = document.getElementById('codeError');
+            if (codeError) codeError.textContent = '';
+            
+            const codeInput = document.getElementById('codeInput');
+            if (codeInput) {
+                codeInput.classList.remove('error');
+                codeInput.classList.add('success');
+            }
+            
+            if (verificationState.verifiedPlayerA && verificationState.verifiedPlayerB) {
+                console.log('✅ Oba kody poprawne, obliczam ELO...');
+                
+                setTimeout(() => {
+                    closeCodeModal();
+                    
+                    setTimeout(() => {
+                        calculateMatchFinal(pendingMatch.scoreA, pendingMatch.playerA, pendingMatch.playerB);
+                    }, 300);
+                }, 800);
+            } else {
+                setTimeout(() => {
+                    proceedToNextVerification();
+                }, 500);
+            }
+        }
+        
+        function proceedToNextVerification() {
+            const codeInput = document.getElementById('codeInput');
+            if (codeInput) {
+                codeInput.value = '';
+                codeInput.classList.remove('error', 'success');
+                codeInput.focus();
+            }
+            
+            const codeError = document.getElementById('codeError');
+            if (codeError) codeError.textContent = '';
+            
+            if (!verificationState.verifiedPlayerA) {
+                verificationState.currentPlayer = 'A';
+                verificationState.playerName = pendingMatch.playerA.name;
+                updateCodeModal();
+            } else if (!verificationState.verifiedPlayerB) {
+                verificationState.currentPlayer = 'B';
+                verificationState.playerName = pendingMatch.playerB.name;
+                updateCodeModal();
+            }
+        }
+        
+        function updateCodeModal() {
+            const modalPlayerName = document.getElementById('modalPlayerName');
+            const modalMessage = document.getElementById('modalMessage');
+            
+            if (!modalPlayerName || !modalMessage) return;
+            
+            if (verificationState.currentPlayer === 'A') {
+                modalPlayerName.innerHTML = `<strong>${verificationState.playerName}</strong>`;
+                modalMessage.innerHTML = `<p>Wprowadź kod weryfikacyjny dla <strong>Gracza A</strong>:</p>`;
+            } else {
+                modalPlayerName.innerHTML = `<strong>${verificationState.playerName}</strong>`;
+                modalMessage.innerHTML = `<p>Wprowadź kod weryfikacyjny dla <strong>Gracza B</strong>:</p>`;
+            }
+            
+            const modal = document.getElementById('codeModal');
+            if (modal) modal.classList.add('active');
+            
+            setTimeout(() => {
+                const codeInput = document.getElementById('codeInput');
+                if (codeInput) {
+                    codeInput.focus();
+                    codeInput.value = '';
+                    codeInput.classList.remove('error', 'success');
+                }
+            }, 100);
+        }
+        
+        function showCodeModal() {
+            const modal = document.getElementById('codeModal');
+            if (!modal) return;
+            
+            verificationState = {
+                currentPlayer: 'A',
+                playerName: pendingMatch.playerA.name,
+                playerCode: '',
+                verifiedPlayerA: false,
+                verifiedPlayerB: false
+            };
+            
+            updateCodeModal();
+        }
+        
+        function closeCodeModal() {
+            const modal = document.getElementById('codeModal');
+            if (modal) modal.classList.remove('active');
+            
+            if (!verificationState.verifiedPlayerA || !verificationState.verifiedPlayerB) {
+                pendingMatch = null;
+                verificationState = {
+                    currentPlayer: null,
+                    playerName: '',
+                    playerCode: '',
+                    verifiedPlayerA: false,
+                    verifiedPlayerB: false
+                };
+            }
+        }
         
         // ============================================
-        // FUNKCJE Z PIERWSZEGO KODU (KALKULATOR ELO)
+        // POPRAWIONE FUNKCJE DO GENEROWANIA NAZW MECZÓW
+        // ============================================
+        
+        // ZAKTUALIZOWANA FUNKCJA: Teraz używa prawidłowego numeru meczu
+        async function generateMatchId(matchData) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('pl-PL').replace(/\./g, '.');
+            const uniqueCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+            
+            if (currentSeason) {
+                const seasonNumber = currentSeason.seasonNumber || 1;
+                const seasonName = (currentSeason.name || `Sezon${seasonNumber}`).replace(/ /g, '_');
+                
+                // POPRAWIONE: Pobierz aktualny numer meczu w sezonie
+                let matchNumber = 1;
+                try {
+                    // Sprawdź w systemieSettings aktualny licznik meczy dla tego sezonu
+                    const seasonKey = `season${seasonNumber}_matchCounter`;
+                    matchNumber = systemSettings[seasonKey] || 1;
+                    
+                    // Zaktualizuj licznik dla następnego meczu
+                    systemSettings[seasonKey] = matchNumber + 1;
+                    
+                    // Zapisz zaktualizowane ustawienia
+                    await updateMatchCounterInSettings(seasonKey, matchNumber + 1);
+                    
+                } catch (error) {
+                    console.error("Błąd pobierania numeru meczu:", error);
+                }
+                
+                return `${seasonNumber}S_${seasonName}_Game_${matchNumber}_Date_${dateStr}_${uniqueCode}`;
+            } else {
+                // Tryb poza sezonem
+                const offSeasonMatchCount = (systemSettings.offSeasonMatchCount || 0) + 1;
+                
+                return `OffSeason_Game_${offSeasonMatchCount}_Date_${dateStr}_${uniqueCode}`;
+            }
+        }
+        
+        // NOWA FUNKCJA: Aktualizuj licznik meczy w ustawieniach systemu
+        async function updateMatchCounterInSettings(seasonKey, newValue) {
+            if (!db) return;
+            
+            try {
+                await db.collection('system').doc('settings').update({
+                    [seasonKey]: newValue,
+                    updated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                systemSettings[seasonKey] = newValue;
+            } catch (error) {
+                console.error("Błąd aktualizacji licznika meczy:", error);
+            }
+        }
+        
+        async function updateOffSeasonMatchCount() {
+            if (!db) return;
+            
+            try {
+                const currentCount = systemSettings.offSeasonMatchCount || 0;
+                await db.collection('system').doc('settings').update({
+                    offSeasonMatchCount: currentCount + 1,
+                    updated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                systemSettings.offSeasonMatchCount = currentCount + 1;
+            } catch (error) {
+                console.error("Błąd aktualizacji licznika meczy poza sezonem:", error);
+            }
+        }
+        
+        // ============================================
+        // POPRAWIONE OBLICZANIE ELO
+        // ============================================
+        
+        async function calculateMatchFinal(scoreA, playerA, playerB) {
+            console.log('🔍 Rozpoczynam obliczanie ELO:', {
+                playerA: playerA.name,
+                playerB: playerB.name,
+                scoreA: scoreA
+            });
+            
+            if (!db) {
+                alert('❌ Brak połączenia z bazą danych!');
+                return;
+            }
+            
+            const expectedA = 1 / (1 + Math.pow(10, (playerB.elo - playerA.elo) / 400));
+            const change = Math.round(32 * (scoreA - expectedA));
+            
+            const newEloA = playerA.elo + change;
+            const newEloB = playerB.elo - change;
+            
+            console.log('📊 Wyniki obliczeń:', {
+                expectedA: expectedA.toFixed(3),
+                change: change,
+                newEloA: newEloA,
+                newEloB: newEloB
+            });
+            
+            // Generuj czytelną nazwę dokumentu Z POPRAWIONYM NUMEREM MECZU
+            const matchId = await generateMatchId();
+            
+            const matchData = {
+                playerA: playerA.name,
+                playerB: playerB.name,
+                playerAId: playerA.id,
+                playerBId: playerB.id,
+                result: scoreA === 1 ? 'A' : scoreA === 0 ? 'B' : 'D',
+                change: change,
+                eloABefore: playerA.elo,
+                eloBBefore: playerB.elo,
+                eloAAfter: newEloA,
+                eloBAfter: newEloB,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                date: new Date().toLocaleString('pl-PL'),
+                playedBy: currentUserRole,
+                verified: true,
+                seasonId: currentSeason ? currentSeason.id : null,
+                seasonNumber: currentSeason ? currentSeason.seasonNumber : 0,
+                readableId: matchId,
+                isOffSeason: !currentSeason
+            };
+            
+            console.log('💾 Zapisuję mecz do Firebase:', matchData);
+            
+            try {
+                const playerARef = db.collection('players').doc(playerA.id);
+                const playerBRef = db.collection('players').doc(playerB.id);
+                
+                const batch = db.batch();
+                
+                batch.update(playerARef, { 
+                    elo: newEloA,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                batch.update(playerBRef, { 
+                    elo: newEloB,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Jeśli jest sezon, zapisz do historii i zaktualizuj licznik meczy
+                if (currentSeason) {
+                    const historyRef = db.collection('history').doc(matchId);
+                    batch.set(historyRef, matchData);
+                    
+                    // Aktualizuj licznik meczy w sezonie
+                    if (currentSeason.id) {
+                        const seasonRef = db.collection('seasons').doc(currentSeason.id);
+                        const currentMatches = currentSeason.matchesPlayed || 0;
+                        batch.update(seasonRef, {
+                            matchesPlayed: currentMatches + 1
+                        });
+                    }
+                } else {
+                    // Tryb poza sezonem - zapisz do OffSeasonMatchesArchive
+                    const offSeasonRef = db.collection('OffSeasonMatchesArchive').doc(matchId);
+                    batch.set(offSeasonRef, matchData);
+                    
+                    // Zaktualizuj licznik meczy poza sezonem
+                    await updateOffSeasonMatchCount();
+                }
+                
+                await batch.commit();
+                
+                console.log('✅ Mecz zapisany pomyślnie! ID:', matchId);
+                
+                let resultText = '';
+                if (scoreA === 1) {
+                    resultText = `${playerA.name} wygrał z ${playerB.name}`;
+                } else if (scoreA === 0) {
+                    resultText = `${playerB.name} wygrał z ${playerA.name}`;
+                } else {
+                    resultText = `${playerA.name} zremisował z ${playerA.name}`;
+                }
+                
+                const changeA = change > 0 ? `+${change}` : change;
+                const changeB = -change > 0 ? `+${-change}` : -change;
+                
+                const message = `🎯 ${resultText}\n\n` +
+                               `${playerA.name}: ${playerA.elo} → ${newEloA} (${changeA})\n` +
+                               `${playerB.name}: ${playerB.elo} → ${newEloB} (${changeB})\n\n` +
+                               `📅 ${new Date().toLocaleString('pl-PL')}\n` +
+                               `✅ ELO zaktualizowane pomyślnie!\n` +
+                               `📁 ID meczu: ${matchId}`;
+                
+                alert(message);
+                
+                updateLocalPlayersAfterMatch(playerA.id, newEloA, playerB.id, newEloB);
+                updateAllDisplays();
+                
+                pendingMatch = null;
+                verificationState = {
+                    currentPlayer: null,
+                    playerName: '',
+                    playerCode: '',
+                    verifiedPlayerA: false,
+                    verifiedPlayerB: false
+                };
+                
+            } catch (error) {
+                console.error('❌ Błąd zapisywania meczu:', error);
+                
+                let errorMessage = '❌ Błąd zapisywania meczu!\n\n';
+                
+                if (error.code === 'permission-denied') {
+                    errorMessage += 'Błąd uprawnień Firebase.\nSprawdź reguły Firestore.';
+                } else if (error.code === 'not-found') {
+                    errorMessage += 'Nie znaleziono graczy w bazie danych.';
+                } else {
+                    errorMessage += `Kod błędu: ${error.code}\n${error.message}`;
+                }
+                
+                alert(errorMessage);
+            }
+        }
+        
+        function updateLocalPlayersAfterMatch(playerAId, newEloA, playerBId, newEloB) {
+            const playerAIndex = players.findIndex(p => p.id === playerAId);
+            const playerBIndex = players.findIndex(p => p.id === playerBId);
+            
+            if (playerAIndex !== -1) {
+                players[playerAIndex].elo = newEloA;
+            }
+            
+            if (playerBIndex !== -1) {
+                players[playerBIndex].elo = newEloB;
+            }
+            
+            players.sort((a, b) => b.elo - a.elo);
+        }
+        
+        // ============================================
+        // FUNKCJE Z PIERWSZEGO KODU (Z POPRAWKAMI)
         // ============================================
         
         function generateRandomCode() {
@@ -2379,90 +3274,6 @@
             if (element) {
                 element.value = randomCode;
                 element.focus();
-            }
-        }
-        
-        // Modal weryfikacji kodu
-        function showCodeModal(playerType, playerName) {
-            verificationPlayer = playerType;
-            const modal = document.getElementById('codeModal');
-            const playerNameElement = document.getElementById('modalPlayerName');
-            const message = document.getElementById('modalMessage');
-            
-            if (playerNameElement) playerNameElement.innerHTML = `<strong>${playerName}</strong>`;
-            
-            if (playerType === 'A') {
-                if (message) message.innerHTML = `<p>Wprowadź kod weryfikacyjny dla <strong>Gracza A</strong>:</p>`;
-            } else {
-                if (message) message.innerHTML = `<p>Wprowadź kod weryfikacyjny dla <strong>Gracza B</strong>:</p>`;
-            }
-            
-            const codeInput = document.getElementById('codeInput');
-            if (codeInput) {
-                codeInput.value = '';
-                codeInput.focus();
-            }
-            
-            if (modal) modal.classList.add('active');
-        }
-        
-        function closeCodeModal() {
-            const modal = document.getElementById('codeModal');
-            if (modal) modal.classList.remove('active');
-        }
-        
-        function submitCode() {
-            const codeInput = document.getElementById('codeInput');
-            if (!codeInput) return;
-            
-            const codeValue = codeInput.value;
-            
-            if (codeValue.length !== 5) {
-                alert('Kod musi mieć dokładnie 5 cyfr!');
-                codeInput.focus();
-                return;
-            }
-            
-            if (!pendingMatch) {
-                alert('❌ Błąd: Brak danych meczu. Spróbuj ponownie.');
-                closeCodeModal();
-                return;
-            }
-            
-            let playerToVerify = null;
-            let playerName = '';
-            
-            if (verificationPlayer === 'A' && pendingMatch.playerA) {
-                playerToVerify = pendingMatch.playerA;
-                playerName = pendingMatch.playerA.name;
-            } else if (verificationPlayer === 'B' && pendingMatch.playerB) {
-                playerToVerify = pendingMatch.playerB;
-                playerName = pendingMatch.playerB.name;
-            }
-            
-            if (!playerToVerify) {
-                alert('Błąd weryfikacji! Spróbuj ponownie.');
-                closeCodeModal();
-                pendingMatch = null;
-                return;
-            }
-            
-            if (playerToVerify.code !== codeValue) {
-                alert(`❌ Nieprawidłowy kod weryfikacyjny dla gracza ${playerName}!`);
-                codeInput.value = '';
-                codeInput.focus();
-                return;
-            }
-            
-            alert(`✅ Poprawny kod dla ${playerName}!`);
-            
-            if (verificationPlayer === 'A' && pendingMatch) {
-                showCodeModal('B', pendingMatch.playerB.name);
-            } else if (verificationPlayer === 'B' && pendingMatch) {
-                closeCodeModal();
-                calculateMatchFinal(pendingMatch.scoreA, pendingMatch.playerA, pendingMatch.playerB);
-                pendingMatch = null;
-                verificationPlayer = null;
             }
         }
         
@@ -2489,7 +3300,6 @@
             
             currentPage = pageId;
             
-            // Aktualizuj strony gdy są pokazywane
             if (pageId === 'ranks') {
                 setTimeout(() => {
                     generateRanksPage();
@@ -2505,6 +3315,8 @@
                 }, 100);
             } else if (pageId === 'seasons') {
                 setTimeout(() => {
+                    // Resetuj paginację gdy wchodzimy na stronę sezonów
+                    seasonsPagination.currentPage = 1;
                     generateSeasonsPage();
                 }, 100);
             } else if (pageId === 'games') {
@@ -2556,7 +3368,7 @@
                             alert('✅ Zalogowano do panelu systemowego!');
                             passwordInput.value = '';
                         } else {
-                            alert('❌ To urządzenie nie ma dostępu systemowego!\n\nTwoje Device ID: ' + currentDeviceId + '\nSkontaktuj się z administratorem aby dodać to urządzenie.');
+                            alert('❌ To urządzenie nie ma dostępu systemowego!\n\nTwoje Device ID: ' + currentDeviceId);
                             passwordInput.value = '';
                         }
                     } else {
@@ -2668,6 +3480,7 @@
                         if (systemSettings.userEnabled === undefined) systemSettings.userEnabled = false;
                         if (!systemSettings.adminPassword) systemSettings.adminPassword = '';
                         if (!systemSettings.userPassword) systemSettings.userPassword = '';
+                        if (!systemSettings.offSeasonMatchCount) systemSettings.offSeasonMatchCount = 0;
                         
                         console.log('Ustawienia systemowe załadowane:', systemSettings);
                         updateRoleStatusDisplay();
@@ -2677,7 +3490,8 @@
                             adminEnabled: false,
                             userEnabled: false,
                             adminPassword: '',
-                            userPassword: ''
+                            userPassword: '',
+                            offSeasonMatchCount: 0
                         };
                     }
                 }, error => {
@@ -2686,7 +3500,8 @@
                         adminEnabled: false,
                         userEnabled: false,
                         adminPassword: '',
-                        userPassword: ''
+                        userPassword: '',
+                        offSeasonMatchCount: 0
                     };
                 });
         }
@@ -2862,22 +3677,121 @@
                     console.error("Błąd ładowania graczy:", error);
                 });
             
-            // Historia
+            // Załaduj odpowiednią historię w zależności od sezonu
+            loadHistoryBasedOnSeason();
+            
+            loadSystemSettings();
+        }
+        
+        // Funkcja do ładowania historii w zależności od sezonu
+        function loadHistoryBasedOnSeason() {
+            if (!db) return;
+            
+            // Zatrzymaj poprzednie subskrypcje
             if (unsubscribeHistory) unsubscribeHistory();
+            if (unsubscribeOffSeasonHistory) unsubscribeOffSeasonHistory();
+            
+            const now = new Date();
+            
+            if (currentSeason) {
+                const seasonStart = new Date(currentSeason.startDate);
+                const seasonEnd = new Date(currentSeason.endDate);
+                
+                // Sprawdź czy obecnie trwa sezon
+                if (now >= seasonStart && now <= seasonEnd && currentSeason.status !== 'ended') {
+                    // Trwa sezon - ładuj z 'history'
+                    loadSeasonHistory();
+                    updateHistoryTitle(true);
+                } else {
+                    // Okres poza sezonem - ładuj z 'OffSeasonMatchesArchive'
+                    loadOffSeasonHistory();
+                    updateHistoryTitle(false);
+                }
+            } else {
+                // Brak sezonu - okres poza sezonem
+                loadOffSeasonHistory();
+                updateHistoryTitle(false);
+            }
+        }
+        
+        // Ładowanie historii sezonu
+        function loadSeasonHistory() {
+            if (!db) return;
+            
             unsubscribeHistory = db.collection('history')
                 .orderBy('timestamp', 'desc')
                 .limit(10)
                 .onSnapshot(snapshot => {
                     history = [];
                     snapshot.forEach(doc => {
-                        history.push(doc.data());
+                        const data = doc.data();
+                        history.push({
+                            ...data,
+                            id: doc.id
+                        });
                     });
                     updateHistory();
                 }, error => {
-                    console.error("Błąd ładowania historii:", error);
+                    console.error("Błąd ładowania historii sezonu:", error);
                 });
+        }
+        
+        // Ładowanie historii poza sezonem
+        function loadOffSeasonHistory() {
+            if (!db) return;
             
-            loadSystemSettings();
+            unsubscribeOffSeasonHistory = db.collection('OffSeasonMatchesArchive')
+                .orderBy('timestamp', 'desc')
+                .limit(10)
+                .onSnapshot(snapshot => {
+                    offSeasonHistory = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        offSeasonHistory.push({
+                            ...data,
+                            id: doc.id
+                        });
+                    });
+                    updateHistory();
+                }, error => {
+                    console.error("Błąd ładowania historii poza sezonem:", error);
+                });
+        }
+        
+        // Aktualizacja tytułu historii
+        function updateHistoryTitle(isSeason) {
+            const historyTitle = document.getElementById('historyTitle');
+            if (!historyTitle) return;
+            
+            if (isSeason) {
+                historyTitle.textContent = '📜 OSTATNIE MECZE W SEZONIE';
+            } else {
+                historyTitle.textContent = '📜 OSTATNIE MECZE POZA SEZONEM';
+            }
+        }
+        
+        // Aktualizacja tytułu rankingu
+        function updateRankingTitle() {
+            const rankingTitle = document.getElementById('rankingTitle');
+            if (!rankingTitle) return;
+            
+            const now = new Date();
+            let isSeasonActive = false;
+            
+            if (currentSeason) {
+                const seasonStart = new Date(currentSeason.startDate);
+                const seasonEnd = new Date(currentSeason.endDate);
+                
+                if (now >= seasonStart && now <= seasonEnd && currentSeason.status !== 'ended') {
+                    isSeasonActive = true;
+                }
+            }
+            
+            if (isSeasonActive) {
+                rankingTitle.textContent = '🏆 SEZONOWY RANKING GRACZY';
+            } else {
+                rankingTitle.textContent = '🏆 POZASEZONOWY RANKING GRACZY';
+            }
         }
         
         // Operacje na graczach
@@ -3104,7 +4018,7 @@
                 scoreA: 1
             };
             
-            showCodeModal('A', playerA.name);
+            showCodeModal();
         }
         
         function playerBWins() { 
@@ -3127,7 +4041,7 @@
                 scoreA: 0
             };
             
-            showCodeModal('A', playerA.name);
+            showCodeModal();
         }
         
         function draw() { 
@@ -3150,92 +4064,7 @@
                 scoreA: 0.5
             };
             
-            showCodeModal('A', playerA.name);
-        }
-        
-        // Calculate match final
-        async function calculateMatchFinal(scoreA, playerA, playerB) {
-            console.log('calculateMatchFinal called:', { scoreA, playerA: playerA.name, playerB: playerB.name });
-            
-            if (!db) {
-                alert('Brak połączenia z bazą danych!');
-                return;
-            }
-            
-            const expectedA = 1 / (1 + Math.pow(10, (playerB.elo - playerA.elo) / 400));
-            const change = Math.round(32 * (scoreA - expectedA));
-            
-            const newEloA = playerA.elo + change;
-            const newEloB = playerB.elo - change;
-            
-            const matchData = {
-                playerA: playerA.name,
-                playerB: playerB.name,
-                playerAId: playerA.id,
-                playerBId: playerB.id,
-                result: scoreA === 1 ? 'A' : scoreA === 0 ? 'B' : 'D',
-                change: change,
-                eloABefore: playerA.elo,
-                eloBBefore: playerB.elo,
-                eloAAfter: newEloA,
-                eloBAfter: newEloB,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                date: new Date().toLocaleString(),
-                playedBy: currentUserRole,
-                verified: true
-            };
-            
-            console.log('Match data to save:', matchData);
-            
-            try {
-                const batch = db.batch();
-                
-                const playerARef = db.collection('players').doc(playerA.id);
-                batch.update(playerARef, { elo: newEloA });
-                
-                const playerBRef = db.collection('players').doc(playerB.id);
-                batch.update(playerBRef, { elo: newEloB });
-                
-                const historyRef = db.collection('history').doc();
-                batch.set(historyRef, matchData);
-                
-                await batch.commit();
-                
-                console.log('✅ Mecz zapisany pomyślnie!');
-                showMatchDetails(playerA, playerB, change, scoreA);
-                
-                setTimeout(() => {
-                    updateAllDisplays();
-                }, 500);
-                
-            } catch (error) {
-                console.error('❌ Błąd zapisywania meczu:', error);
-                
-                if (error.code === 'permission-denied') {
-                    alert('❌ Błąd uprawnień Firebase!\nSprawdź czy reguły Firestore pozwalają na zapis.\nBłąd: ' + error.message);
-                } else {
-                    alert('Błąd zapisywania meczu: ' + error.message);
-                }
-            }
-        }
-        
-        function showMatchDetails(playerA, playerB, change, scoreA) {
-            const resultText = scoreA === 1 ? `${playerA.name} wygrał z ${playerB.name}` :
-                              scoreA === 0 ? `${playerB.name} wygrał z ${playerA.name}` :
-                              `${playerA.name} zremisował z ${playerB.name}`;
-            
-            const changeText = change > 0 ? `+${change}` : change;
-            const message = `
-                ${resultText}
-                
-                ${playerA.name}: ${playerA.elo} → ${playerA.elo + change} (${changeText})
-                ${playerB.name}: ${playerB.elo} → ${playerB.elo - change} (${-change})
-                
-                Data: ${new Date().toLocaleString()}
-                ✅ Mecz zweryfikowany kodami
-            `;
-            
-            alert(message);
+            showCodeModal();
         }
         
         // Funkcje pomocnicze
@@ -3244,6 +4073,7 @@
             updatePlayersList();
             updateChanceDisplay();
             updateSwapButton();
+            updateRankingTitle();
         }
         
         function updateSwapButton() {
@@ -3399,23 +4229,46 @@
             const historyElement = document.getElementById('historyList');
             if (!historyElement) return;
             
-            if (history.length === 0) {
+            // Użyj odpowiedniej historii w zależności od sezonu
+            const now = new Date();
+            let currentMatches = [];
+            let isSeasonActive = false;
+            
+            if (currentSeason) {
+                const seasonStart = new Date(currentSeason.startDate);
+                const seasonEnd = new Date(currentSeason.endDate);
+                
+                if (now >= seasonStart && now <= seasonEnd && currentSeason.status !== 'ended') {
+                    currentMatches = history;
+                    isSeasonActive = true;
+                } else {
+                    currentMatches = offSeasonHistory;
+                }
+            } else {
+                currentMatches = offSeasonHistory;
+            }
+            
+            if (currentMatches.length === 0) {
                 historyElement.innerHTML = '-';
                 return;
             }
             
-            historyElement.innerHTML = history.map(match => {
+            const recentHistory = currentMatches.slice(0, 10);
+            
+            historyElement.innerHTML = recentHistory.map(match => {
                 const playerADisplay = formatPlayerName(match.playerA, true);
                 const playerBDisplay = formatPlayerName(match.playerB, true);
                 
                 const verifiedIcon = match.verified ? ' ✅' : '';
+                const idInfo = match.readableId ? `<br><small style="color: #777;">ID: ${match.readableId}</small>` : '';
+                const seasonInfo = isSeasonActive ? '' : '<br><small style="color: #777;">(Mecz pozasezonowy)</small>';
                 
                 return `
                 <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #444; font-size: 14px;">
                     <div><strong>${playerADisplay} vs ${playerBDisplay}${verifiedIcon}</strong></div>
                     <div>Wynik: ${match.result === 'A' ? `🏆 ${playerADisplay}` : match.result === 'B' ? `🏆 ${playerBDisplay}` : '🤝 Remis'}</div>
                     <div>Zmiana: ${match.change > 0 ? '+' : ''}${match.change}</div>
-                    <div style="font-size: 12px; color: #aaa;">${match.date}</div>
+                    <div style="font-size: 12px; color: #aaa;">${match.date}${idInfo}${seasonInfo}</div>
                 </div>
                 `;
             }).join('');
@@ -3427,7 +4280,6 @@
         
         function selectGameMode(mode) {
             if (mode === '501') {
-                // Resetuj stan gry
                 resetGameState();
                 showPage('gameSetup');
             }
@@ -3450,7 +4302,7 @@
             select2.innerHTML = '<option value="">Wybierz gracza</option>';
             
             players.forEach(player => {
-                const displayName = formatPlayerName(player.name, false); // Pełne nazwiska w grach
+                const displayName = formatPlayerName(player.name, false);
                 const option = `<option value="${player.id}">${displayName} (${player.elo})</option>`;
                 select1.innerHTML += option;
                 select2.innerHTML += option;
@@ -3540,7 +4392,6 @@
                 return;
             }
             
-            // Zapisz graczy do gry
             currentGame.player1 = player1;
             currentGame.player2 = player2;
             currentGame.startingPlayer = 1;
@@ -3555,7 +4406,6 @@
             currentGame.winner = null;
             currentGame.gameId = 'game_' + Date.now();
             
-            // Resetuj statystyki
             currentGame.stats = {
                 player1: {
                     totalPoints: 0,
@@ -3575,29 +4425,22 @@
             
             gameHistory = [];
             
-            // Wyświetl stronę gry
             showPage('game501');
-            
-            // Zaktualizuj interfejs gry
             updateGameUI();
         }
         
         function updateGameUI() {
             if (!currentGame.player1 || !currentGame.player2) return;
             
-            // Aktualizuj nazwy graczy
             document.getElementById('player1Name').textContent = currentGame.player1.name;
             document.getElementById('player2Name').textContent = currentGame.player2.name;
             
-            // Aktualizuj punkty
             document.getElementById('player1Points').textContent = currentGame.scores.player1;
             document.getElementById('player2Points').textContent = currentGame.scores.player2;
             
-            // Aktualizuj statystyki
             document.getElementById('player1Legs').textContent = currentGame.legs.player1;
             document.getElementById('player2Legs').textContent = currentGame.legs.player2;
             
-            // Oblicz średnie
             const avg1 = currentGame.stats.player1.dartsThrown > 0 
                 ? (currentGame.stats.player1.totalPoints / currentGame.stats.player1.dartsThrown * 3).toFixed(2)
                 : '0.00';
@@ -3608,7 +4451,6 @@
             document.getElementById('player1Average').textContent = avg1;
             document.getElementById('player2Average').textContent = avg2;
             
-            // Aktualizuj informacje o turze
             const currentPlayerName = currentGame.currentPlayer === 1 
                 ? currentGame.player1.name 
                 : currentGame.player2.name;
@@ -3616,7 +4458,6 @@
             document.getElementById('currentPlayerName').textContent = currentPlayerName;
             document.getElementById('dartsThrown').textContent = `${currentGame.dartsThrown}/3`;
             
-            // Zaktualizuj aktywnego gracza
             document.getElementById('player1Score').classList.remove('active', 'winner');
             document.getElementById('player2Score').classList.remove('active', 'winner');
             
@@ -3634,19 +4475,13 @@
                 }
             }
             
-            // Zaktualizuj przyciski mnożników
             document.querySelectorAll('.multiplier-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelectorAll('.multiplier-btn')[currentMultiplier - 1].classList.add('active');
             
-            // Oblicz sumę kolejki
             calculateTurnTotal();
-            
-            // Zaktualizuj historię kolejek
             updateTurnsHistory();
-            
-            // Zaktualizuj wskazówki checkout
             updateCheckoutHints();
         }
         
@@ -3664,7 +4499,6 @@
             const total = (dart1 + dart2 + dart3) * currentMultiplier;
             document.getElementById('turnTotal').textContent = total;
             
-            // Oblicz nowy wynik
             const currentScore = currentGame.currentPlayer === 1 
                 ? currentGame.scores.player1 
                 : currentGame.scores.player2;
@@ -3680,7 +4514,6 @@
                 document.getElementById('newScore').style.color = '#4CAF50';
             }
             
-            // Sprawdź czy można wysłać rzuty
             const submitBtn = document.getElementById('submitDartsBtn');
             if (submitBtn) {
                 if (dart1 === 0 && dart2 === 0 && dart3 === 0) {
@@ -3699,7 +4532,6 @@
             let hint = '';
             
             if (currentScore <= 170) {
-                // Podaj popularne checkouty
                 if (currentScore === 170) hint = 'Checkout: T20 + T20 + Bull';
                 else if (currentScore === 167) hint = 'Checkout: T20 + T19 + Bull';
                 else if (currentScore === 164) hint = 'Checkout: T20 + T18 + Bull';
@@ -3721,7 +4553,6 @@
             const dart2 = parseInt(document.getElementById('dart2').value) || 0;
             const dart3 = parseInt(document.getElementById('dart3').value) || 0;
             
-            // Sprawdź czy wszystkie rzuty są puste
             if (dart1 === 0 && dart2 === 0 && dart3 === 0) {
                 alert('Wprowadź punkty z przynajmniej jednego rzutu!');
                 return;
@@ -3729,7 +4560,6 @@
             
             const total = (dart1 + dart2 + dart3) * currentMultiplier;
             
-            // Zapisz kolejkę
             const turn = {
                 player: currentGame.currentPlayer,
                 darts: [dart1 * currentMultiplier, dart2 * currentMultiplier, dart3 * currentMultiplier],
@@ -3737,7 +4567,6 @@
                 timestamp: new Date()
             };
             
-            // Sprawdź czy gracz nie przekroczył wyniku
             const currentScore = currentGame.currentPlayer === 1 
                 ? currentGame.scores.player1 
                 : currentGame.scores.player2;
@@ -3745,45 +4574,34 @@
             const newScore = currentScore - total;
             
             if (newScore < 0 || (newScore === 1) || (newScore > 0 && newScore < 2)) {
-                // Bust! Kolejka nie liczy się
                 turn.valid = false;
                 turn.result = 'BUST';
                 
-                // Dodaj kolejkę do historii
                 currentGame.turns.push(turn);
                 gameHistory.push({...turn, playerName: currentGame.currentPlayer === 1 ? currentGame.player1.name : currentGame.player2.name});
                 
-                // Przełącz gracza
                 currentGame.currentPlayer = currentGame.currentPlayer === 1 ? 2 : 1;
                 currentGame.dartsThrown = 0;
                 
-                // Wyczyść pola
                 clearDartInputs();
-                
-                // Zaktualizuj UI
                 updateGameUI();
                 
-                // Pokaż informację o bust
                 alert(`BUST! ${currentGame.currentPlayer === 1 ? currentGame.player2.name : currentGame.player1.name} przekroczył wynik. Kolejka przechodzi do przeciwnika.`);
                 return;
             }
             
             if (newScore === 0) {
-                // Sprawdź czy ostatni rzut był podwójnym
                 const lastDart = dart3 * currentMultiplier;
                 const isDoubleFinish = lastDart % 2 === 0 && lastDart <= 40 && lastDart > 0;
                 const isBull = lastDart === 50 || lastDart === 25;
                 
                 if (isDoubleFinish || isBull || (dart1 * currentMultiplier === 0 && dart2 * currentMultiplier === 0 && (isDoubleFinish || isBull))) {
-                    // Wygrana! Gracz osiągnął 0 z podwójnym finiszem
                     turn.valid = true;
                     turn.result = 'WIN';
                     
-                    // Dodaj kolejkę do historii
                     currentGame.turns.push(turn);
                     gameHistory.push({...turn, playerName: currentGame.currentPlayer === 1 ? currentGame.player1.name : currentGame.player2.name});
                     
-                    // Zaktualizuj statystyki
                     if (currentGame.currentPlayer === 1) {
                         currentGame.legs.player1++;
                         currentGame.stats.player1.turns++;
@@ -3802,56 +4620,41 @@
                         }
                     }
                     
-                    // Ustaw zwycięzcę
                     currentGame.gameOver = true;
                     currentGame.winner = currentGame.currentPlayer;
                     
-                    // Wyczyść pola
                     clearDartInputs();
-                    
-                    // Zaktualizuj UI
                     updateGameUI();
                     
-                    // Przejdź do wyników po krótkim opóźnieniu
                     setTimeout(() => {
                         showGameResults();
                     }, 1500);
                     
                     return;
                 } else {
-                    // Bust! Ostatni rzut nie był podwójnym
                     turn.valid = false;
                     turn.result = 'BUST (no double)';
                     
-                    // Dodaj kolejkę do historii
                     currentGame.turns.push(turn);
                     gameHistory.push({...turn, playerName: currentGame.currentPlayer === 1 ? currentGame.player1.name : currentGame.player2.name});
                     
-                    // Przełącz gracza
                     currentGame.currentPlayer = currentGame.currentPlayer === 1 ? 2 : 1;
                     currentGame.dartsThrown = 0;
                     
-                    // Wyczyść pola
                     clearDartInputs();
-                    
-                    // Zaktualizuj UI
                     updateGameUI();
                     
-                    // Pokaż informację o bust
                     alert('BUST! Ostatni rzut musi być podwójnym (lub bulleye) aby wygrać!');
                     return;
                 }
             }
             
-            // Normalna kolejka
             turn.valid = true;
             turn.result = 'OK';
             
-            // Dodaj kolejkę do historii
             currentGame.turns.push(turn);
             gameHistory.push({...turn, playerName: currentGame.currentPlayer === 1 ? currentGame.player1.name : currentGame.player2.name});
             
-            // Zaktualizuj wynik
             if (currentGame.currentPlayer === 1) {
                 currentGame.scores.player1 = newScore;
                 currentGame.stats.player1.turns++;
@@ -3864,14 +4667,10 @@
                 currentGame.stats.player2.dartsThrown += 3;
             }
             
-            // Przełącz gracza
             currentGame.currentPlayer = currentGame.currentPlayer === 1 ? 2 : 1;
             currentGame.dartsThrown = 0;
             
-            // Wyczyść pola
             clearDartInputs();
-            
-            // Zaktualizuj UI
             updateGameUI();
         }
         
@@ -3894,18 +4693,15 @@
                 return;
             }
             
-            // Pobierz ostatnią kolejkę
             const lastTurn = currentGame.turns.pop();
             gameHistory.pop();
             
             if (!lastTurn) return;
             
-            // Cofnij wynik
             if (lastTurn.player === 1) {
                 if (lastTurn.valid && lastTurn.result !== 'WIN') {
                     currentGame.scores.player1 += lastTurn.total;
                 }
-                // Cofnij statystyki
                 currentGame.stats.player1.turns--;
                 currentGame.stats.player1.totalPoints -= lastTurn.total;
                 currentGame.stats.player1.dartsThrown -= 3;
@@ -3913,13 +4709,11 @@
                 if (lastTurn.valid && lastTurn.result !== 'WIN') {
                     currentGame.scores.player2 += lastTurn.total;
                 }
-                // Cofnij statystyki
                 currentGame.stats.player2.turns--;
                 currentGame.stats.player2.totalPoints -= lastTurn.total;
                 currentGame.stats.player2.dartsThrown -= 3;
             }
             
-            // Jeśli była to wygrana, cofnij legi
             if (lastTurn.result === 'WIN') {
                 if (lastTurn.player === 1) {
                     currentGame.legs.player1--;
@@ -3932,13 +4726,8 @@
                 }
             }
             
-            // Przywróć poprzedniego gracza
             currentGame.currentPlayer = lastTurn.player;
-            
-            // Zaktualizuj UI
             updateGameUI();
-            
-            // Aktualizuj przycisk cofania
             updateUndoButton();
         }
         
@@ -3960,7 +4749,6 @@
             
             let historyHTML = '';
             
-            // Pokaż ostatnie 10 kolejek
             const recentTurns = gameHistory.slice(-10).reverse();
             
             recentTurns.forEach(turn => {
@@ -3987,15 +4775,12 @@
             });
             
             historyElement.innerHTML = historyHTML;
-            
-            // Aktualizuj przycisk cofania
             updateUndoButton();
         }
         
         function showGameResults() {
             showPage('gameResults');
             
-            // Aktualizuj wyniki
             document.getElementById('winnerName').textContent = currentGame.winner === 1 
                 ? currentGame.player1.name 
                 : currentGame.player2.name;
@@ -4032,8 +4817,7 @@
                 return;
             }
             
-            // Przygotuj mecz do kalkulatora ELO
-            const scoreA = currentGame.winner === 1 ? 1 : 0; // 1 = gracz 1 wygrywa, 0 = gracz 2 wygrywa
+            const scoreA = currentGame.winner === 1 ? 1 : 0;
             
             pendingMatch = {
                 playerA: currentGame.player1,
@@ -4041,15 +4825,12 @@
                 scoreA: scoreA
             };
             
-            // Pokaż modal z kodem dla pierwszego gracza
-            showCodeModal('A', currentGame.player1.name);
+            showCodeModal();
         }
         
         function updateEloManual() {
-            // Przejdź do kalkulatora ELO z wybranymi graczami
             showPage('elo');
             
-            // Ustaw wybranych graczy w selectach
             setTimeout(() => {
                 const selectA = document.getElementById('selectPlayerA');
                 const selectB = document.getElementById('selectPlayerB');
@@ -4058,17 +4839,14 @@
                     selectA.value = currentGame.player1.id;
                     selectB.value = currentGame.player2.id;
                     
-                    // Zaktualizuj interfejs
                     onPlayerSelectChange();
                     
-                    // Pokaż komunikat
                     alert('Przejdź teraz do kalkulatora ELO i wybierz wynik meczu ręcznie.');
                 }
             }, 500);
         }
         
         function playAgain() {
-            // Zachowaj graczy, resetuj resztę
             const player1 = currentGame.player1;
             const player2 = currentGame.player2;
             
@@ -4077,7 +4855,6 @@
             currentGame.player1 = player1;
             currentGame.player2 = player2;
             
-            // Przejdź do gry
             showPage('game501');
             updateGameUI();
         }
@@ -4125,10 +4902,115 @@
         }
         
         // ============================================
-        // FUNKCJE Z DRUGIEGO KODU (SEZONY) - POPRAWIONE
+        // FUNKCJE GENERUJĄCE STRONY Z ZDJĘCIAMI
         // ============================================
         
-        // Funkcja do generowania statusu sezonu - POPRAWIONA
+        const ranks = [
+            { 
+                id: 1, 
+                name: "Bez rangi", 
+                minElo: 0, 
+                maxElo: 1000, 
+                image: "https://i.ibb.co/hRRPxjDg/Dart-ranga1.png" 
+            },
+            { 
+                id: 2, 
+                name: "Rekrut", 
+                minElo: 1001, 
+                maxElo: 1200, 
+                image: "https://i.ibb.co/W49qFwy8/Dart-ranga2.png"
+            },
+            { 
+                id: 3, 
+                name: "Nowicjusz", 
+                minElo: 1201, 
+                maxElo: 1400, 
+                image: "https://i.ibb.co/qYQmkn1q/Dart-ranga3.png"
+            },
+            { 
+                id: 4, 
+                name: "Amator", 
+                minElo: 1401, 
+                maxElo: 1600, 
+                image: "https://i.ibb.co/Hp4PpQNh/Dart-ranga4.png"
+            },
+            { 
+                id: 5, 
+                name: "Srebro", 
+                minElo: 1601, 
+                maxElo: 1800, 
+                image: "https://i.ibb.co/jP1w7ppc/Dart-ranga5.png"
+            },
+            { 
+                id: 6, 
+                name: "Złoto", 
+                minElo: 1801, 
+                maxElo: 2000, 
+                image: "https://i.ibb.co/S7XJ9Nw7/Dart-ranga6.png"
+            },
+            { 
+                id: 7, 
+                name: "Diamentowa liga", 
+                minElo: 2001, 
+                maxElo: 2200, 
+                image: "https://i.ibb.co/Mk58SMnk/Dart-ranga7.png"
+            },
+            { 
+                id: 8, 
+                name: "Liga królewska", 
+                minElo: 2201, 
+                maxElo: 2400, 
+                image: "https://i.ibb.co/pjtv4xp9/Dart-ranga8.png"
+            },
+            { 
+                id: 9, 
+                name: "Liga mistrzowska", 
+                minElo: 2401, 
+                maxElo: 9999, 
+                image: "https://i.ibb.co/qbGLk8C/Dart-ranga9.png"
+            }
+        ];
+        
+        const achievements = [
+            { 
+                id: 1, 
+                name: "None", 
+                description: "Jest to informacja, że użytkownik nie posiada żadnych osiągnięć.",
+                image: "https://i.ibb.co/gFSgGXvG/Dart-Place-none.png"
+            },
+            { 
+                id: 2, 
+                name: "Top 3 of season", 
+                description: "To osiągnięcie zdobywa się za uzyskanie trzeciego miejsca w sezonowym rankingu graczy. Jeżeli jednak dodatkowo użytkownik będzie miał rangę 'Liga mistrzowska', zamiast tego osiągnięcia dostaje osiągnięcie 'RANK9 of season'.",
+                image: "https://i.ibb.co/pjG8FvxJ/Dart-Place-third.png"
+            },
+            { 
+                id: 3, 
+                name: "Top 2 of season", 
+                description: "Użytkownik może otrzymać tą rangę za uzyskanie drugiego miejsca w sezonowym rankingu graczy. Jeżeli jednak dodatkowo użytkownik będzie miał rangę 'Liga mistrzowska', zamiast tego osiągnięcia dostaje osiągnięcie 'RANK9 of season'.",
+                image: "https://i.ibb.co/mCh27KL0/Dart-Place-second.png"
+            },
+            { 
+                id: 4, 
+                name: "Top 1 of season", 
+                description: "Gdy użytkownik osiągnie pierwsze miejsce w sezonowym rankingu graczy, to osiągnięcie zostaje przypisane do jego konta. Jeżeli jednak dodatkowo użytkownik będzie miał rangę 'Liga mistrzowska', zamiast tego osiągnięcia dostaje osiągnięcie 'RANK9 of season'.",
+                image: "https://i.ibb.co/1DjXWyg/Dart-Place-first.png"
+            },
+            { 
+                id: 5, 
+                name: "RANK9 of season", 
+                description: "Osiągnięcie to można zdobyć za ukończenie sezonu z rangą dziewiątą.",
+                image: "https://i.ibb.co/PsbcMpb5/Dart-Place-rank9.png"
+            },
+            { 
+                id: 6, 
+                name: "Top 1 of season [RANK9]", 
+                description: "Jeżeli jesteś pierwszy w sezonowym rankingu graczy oraz zakończyłeś sezon z rangą dziewiątą, to omawiane osiągnięcie jest twoje!",
+                image: "https://i.ibb.co/99W5Lgc8/Dart-Place-rank9-first.png"
+            }
+        ];
+        
+        // Funkcja do generowania statusu sezonu
         function generateSeasonStatus() {
             const seasonStatusElement = document.getElementById('seasonStatus');
             if (!seasonStatusElement) return;
@@ -4147,16 +5029,13 @@
             const startDate = new Date(currentSeason.startDate);
             const endDate = new Date(currentSeason.endDate);
             
-            // Resetuj godziny, żeby porównywać tylko daty
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const seasonStart = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
             const seasonEnd = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
             
-            // Oblicz dni do końca (na podstawie pełnych dat z godzinami)
             const daysLeft = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
             
             if (today < seasonStart) {
-                // Sezon jeszcze się nie zaczął
                 const daysToStart = Math.ceil((startDate - now) / (1000 * 60 * 60 * 24));
                 seasonStatusElement.className = 'season-status off-season';
                 seasonStatusElement.innerHTML = `
@@ -4166,7 +5045,6 @@
                     <div class="season-days-left">Za ${daysToStart} ${daysToStart === 1 ? 'dzień' : 'dni'}</div>
                 `;
             } else if (today > seasonEnd) {
-                // Sezon już się zakończył
                 seasonStatusElement.className = 'season-status ended';
                 seasonStatusElement.innerHTML = `
                     <div class="season-name">🏁 SEZON ZAKOŃCZONY</div>
@@ -4175,7 +5053,6 @@
                     <div class="season-days-left">Zakończył się ${Math.abs(daysLeft)} ${Math.abs(daysLeft) === 1 ? 'dzień' : 'dni'} temu</div>
                 `;
             } else {
-                // Sezon trwa!
                 seasonStatusElement.className = 'season-status running';
                 seasonStatusElement.innerHTML = `
                     <div class="season-name">🏆 TRWA SEZON!</div>
@@ -4186,15 +5063,13 @@
             }
         }
         
-        // Funkcja do generowania strony rang
+        // Funkcja do generowania strony rang Z ZDJĘCIAMI
         function generateRanksPage() {
             const ranksListElement = document.getElementById('ranksList');
             if (!ranksListElement) return;
             
-            // Użyj progów z sezonu jeśli istnieje, domyślne jeśli nie
             const rankThresholds = currentSeason ? currentSeason.rankThresholds : {};
             
-            // Grupuj graczy według rang
             const playersByRank = {};
             ranks.forEach(rank => {
                 const minElo = rankThresholds[rank.id] || rank.minElo;
@@ -4205,19 +5080,16 @@
                 );
             });
             
-            // Sortuj graczy w każdej randze malejąco według ELO
             ranks.forEach(rank => {
                 playersByRank[rank.id].sort((a, b) => b.elo - a.elo);
             });
             
-            // Generuj HTML dla każdej rangi
             let ranksHTML = '';
             
             ranks.forEach(rank => {
                 const playersInRank = playersByRank[rank.id];
                 const playersCount = playersInRank.length;
                 
-                // Pobierz progi dla tej rangi (z sezonu lub domyślne)
                 const minElo = rankThresholds[rank.id] || rank.minElo;
                 let maxElo = rank.maxElo;
                 
@@ -4225,7 +5097,6 @@
                     maxElo = rankThresholds[rank.id + 1] ? rankThresholds[rank.id + 1] - 1 : rank.maxElo;
                 }
                 
-                // Formatowanie przedziału ELO
                 let eloRange = '';
                 if (rank.id === 1) {
                     eloRange = `Wymagane ELO: ${minElo}-${maxElo}`;
@@ -4235,7 +5106,6 @@
                     eloRange = `Wymagane ELO: ${minElo}`;
                 }
                 
-                // HTML dla graczy w randze
                 let playersHTML = '';
                 if (playersCount > 0) {
                     playersHTML = '<div class="players-on-rank">';
@@ -4260,19 +5130,20 @@
                     playersHTML = '<div class="no-players">Brak graczy na tej randze</div>';
                 }
                 
-                // Dodaj specjalną klasę dla rang 1 i 9
                 const rankClass = rank.id === 1 ? 'rank-1' : (rank.id === 9 ? 'rank-9' : '');
                 
-                // Generuj HTML dla rangi
                 ranksHTML += `
                     <div class="rank-container ${rankClass}">
                         <div class="rank-number">${rank.id}</div>
                         
                         <div class="rank-image-container">
-                            <div style="color: #777; font-size: 12px; text-align: center; padding: 10px;">
-                                Ranga ${rank.id}<br>
-                                (pixel art)
-                            </div>
+                            ${rank.image ? 
+                                `<img src="${rank.image}" alt="${rank.name}" class="rank-image">` : 
+                                `<div style="color: #777; font-size: 12px; text-align: center; padding: 10px;">
+                                    Ranga ${rank.id}<br>
+                                    (brak obrazka)
+                                 </div>`
+                            }
                         </div>
                         
                         <div class="rank-info">
@@ -4291,9 +5162,44 @@
             
             ranksListElement.innerHTML = ranksHTML;
             
-            // Aktualizuj przyciski sezonu
             updateNewSeasonButton();
             updateEndSeasonButton();
+        }
+        
+        // Funkcja do generowania strony osiągnięć Z ZDJĘCIAMI
+        function generateAchievementsPage() {
+            const achievementsListElement = document.getElementById('achievementsList');
+            if (!achievementsListElement) return;
+            
+            let achievementsHTML = '';
+            
+            achievements.forEach(achievement => {
+                const isNoneAchievement = achievement.id === 1;
+                const borderColor = isNoneAchievement ? '#666' : '#FF9800';
+                const nameColor = isNoneAchievement ? '#666' : '#FF9800';
+                
+                achievementsHTML += `
+                    <div class="achievement-container" style="border-left-color: ${borderColor};">
+                        <div class="achievement-image-container" style="border-color: ${borderColor};">
+                            ${achievement.image ? 
+                                `<img src="${achievement.image}" alt="${achievement.name}" class="achievement-image">` : 
+                                `<div style="color: #777; font-size: 11px; text-align: center; padding: 5px;">
+                                    Osiągnięcie ${achievement.id}
+                                 </div>`
+                            }
+                        </div>
+                        
+                        <div class="achievement-text-container">
+                            <div class="achievement-name" style="color: ${nameColor};">${achievement.name}</div>
+                            <div class="achievement-description">
+                                ${achievement.description}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            achievementsListElement.innerHTML = achievementsHTML;
         }
         
         // Aktualizuj przycisk nowego sezonu
@@ -4301,17 +5207,14 @@
             const newSeasonBtn = document.getElementById('newSeasonBtn');
             if (!newSeasonBtn) return;
             
-            // Pokaż tylko dla admina i deva
             if (currentUserRole === 'admin' || currentUserRole === 'dev') {
                 newSeasonBtn.classList.remove('hidden');
                 
-                // Sprawdź czy można rozpocząć nowy sezon
                 const now = new Date();
                 let canStartNewSeason = true;
                 
                 if (currentSeason) {
                     const endDate = new Date(currentSeason.endDate);
-                    // DEV też NIE MOŻE rozpoczynać nowego sezonu podczas trwania obecnego
                     if (now <= endDate) {
                         canStartNewSeason = false;
                         newSeasonBtn.disabled = true;
@@ -4332,25 +5235,21 @@
             }
         }
         
-        // Aktualizuj przycisk zakończenia sezonu (tylko dla DEV) - POPRAWIONA
+        // Aktualizuj przycisk zakończenia sezonu (tylko dla DEV)
         function updateEndSeasonButton() {
             const endSeasonBtn = document.getElementById('endSeasonBtn');
             if (!endSeasonBtn) return;
             
-            // Pokaż tylko dla deva
             if (currentUserRole === 'dev') {
                 endSeasonBtn.classList.remove('hidden');
                 
-                // Sprawdź czy można zakończyć sezon
                 if (currentSeason) {
                     const now = new Date();
                     const startDate = new Date(currentSeason.startDate);
                     
-                    // Resetuj godziny, żeby porównywać tylko daty
                     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                     const seasonStart = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
                     
-                    // DEV może zakończyć sezon tylko jeśli się już rozpoczął (dzisiaj lub wcześniej)
                     if (today >= seasonStart) {
                         endSeasonBtn.disabled = false;
                         endSeasonBtn.classList.remove('disabled');
@@ -4370,46 +5269,64 @@
             }
         }
         
-        // Funkcja do generowania strony osiągnięć
-        function generateAchievementsPage() {
-            const achievementsListElement = document.getElementById('achievementsList');
-            if (!achievementsListElement) return;
+        // ============================================
+        // NOWY SYSTEM PAGINACJI (STRONICOWANIA) SEZONÓW
+        // ============================================
+        
+        // NOWA FUNKCJA: Obliczanie ilości sezonów na stronę z odwróconą logiką
+        function calculateSeasonsPerPage() {
+            const totalSeasons = seasonsPagination.allSeasons.length;
             
-            let achievementsHTML = '';
+            if (totalSeasons === 0) return { pages: 1, seasonsPerPage: [] };
             
-            achievements.forEach(achievement => {
-                const isNoneAchievement = achievement.id === 1;
+            let pages = 1;
+            const seasonsPerPage = [];
+            
+            // ODWRÓCONA LOGIKA: Ostatnia strona pełna, pierwsza częściowo
+            if (totalSeasons <= 10) {
+                pages = 1;
+                seasonsPerPage.push(totalSeasons);
+            } else {
+                // Oblicz ile pełnych stron można mieć
+                const fullPages = Math.floor(totalSeasons / 10);
+                const remainingSeasons = totalSeasons % 10;
                 
-                achievementsHTML += `
-                    <div class="achievement-container" style="${isNoneAchievement ? 'border-left-color: #666;' : ''}">
-                        <div class="achievement-image-container" style="${isNoneAchievement ? 'border-color: #666;' : ''}">
-                            <div style="color: #777; font-size: 11px; text-align: center; padding: 5px;">
-                                Osiągnięcie ${achievement.id}
-                            </div>
-                        </div>
-                        
-                        <div class="achievement-text-container">
-                            <div class="achievement-name" style="${isNoneAchievement ? 'color: #666;' : ''}">${achievement.name}</div>
-                            <div class="achievement-description">
-                                ${achievement.description}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
+                if (remainingSeasons > 0) {
+                    pages = fullPages + 1;
+                    // Pierwsza strona ma pozostałe sezony (1-9)
+                    seasonsPerPage.push(remainingSeasons);
+                    // Kolejne strony po 10 sezonów
+                    for (let i = 1; i < pages; i++) {
+                        seasonsPerPage.push(10);
+                    }
+                } else {
+                    pages = fullPages;
+                    // Wszystkie strony po 10 sezonów
+                    for (let i = 0; i < pages; i++) {
+                        seasonsPerPage.push(10);
+                    }
+                }
+            }
             
-            achievementsListElement.innerHTML = achievementsHTML;
+            return { pages, seasonsPerPage };
         }
         
-        // Funkcja do generowania strony wcześniejszych sezonów
+        // ZMIENIONA FUNKCJA: Generowanie strony wcześniejszych sezonów z odwróconą paginacją
         async function generateSeasonsPage() {
             const seasonsListElement = document.getElementById('seasonsList');
-            if (!seasonsListElement) return;
+            const seasonsPaginationElement = document.getElementById('seasonsPagination');
             
-            // Załaduj sezony z Firebase
-            await loadPreviousSeasons();
+            if (!seasonsListElement || !seasonsPaginationElement) return;
             
-            if (previousSeasons.length === 0) {
+            // Załaduj wszystkie sezony
+            await loadAllSeasons();
+            
+            // Oblicz paginację z odwróconą logiką
+            const paginationInfo = calculateSeasonsPerPage();
+            seasonsPagination.totalPages = paginationInfo.pages;
+            const seasonsPerPage = paginationInfo.seasonsPerPage;
+            
+            if (seasonsPagination.allSeasons.length === 0) {
                 seasonsListElement.innerHTML = `
                     <div class="season-container">
                         <div class="season-info">
@@ -4418,58 +5335,423 @@
                         </div>
                     </div>
                 `;
+                seasonsPaginationElement.classList.add('hidden');
                 return;
             }
             
+            // Pokaż kontener paginacji
+            seasonsPaginationElement.classList.remove('hidden');
+            
+            // Oblicz zakres sezonów do wyświetlenia (ODWRÓCONA LOGIKA)
+            let startIndex = 0;
+            let endIndex = 0;
+            
+            // Ponieważ pierwsza strona ma mniej sezonów, musimy obliczyć indeksy inaczej
+            if (seasonsPagination.currentPage === 1) {
+                // Pierwsza strona: 0 do seasonsPerPage[0]
+                endIndex = seasonsPerPage[0];
+            } else {
+                // Kolejne strony: sumujemy sezony z poprzednich stron
+                for (let i = 0; i < seasonsPagination.currentPage - 1; i++) {
+                    startIndex += seasonsPerPage[i];
+                }
+                endIndex = startIndex + seasonsPerPage[seasonsPagination.currentPage - 1];
+            }
+            
+            const seasonsToShow = seasonsPagination.allSeasons.slice(startIndex, endIndex);
+            
             let seasonsHTML = '';
             
-            previousSeasons.forEach(season => {
-                // Oblicz długość sezonu w dniach
+            seasonsToShow.forEach(season => {
+                const isExpanded = expandedSeasonId === season.id;
+                const expandedClass = isExpanded ? 'expanded' : '';
+                
                 const startDate = new Date(season.startDate);
                 const endDate = new Date(season.endDate);
                 const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
                 
+                const matchesPlayed = season.matchesPlayed || 0;
+                const matchesCounter = matchesPlayed > 0 ? 
+                    `<span class="matches-counter" title="Rozegrane mecze">🎯 ${matchesPlayed}</span>` : '';
+                
                 seasonsHTML += `
-                    <div class="season-container">
+                    <div class="season-container ${expandedClass}" onclick="toggleSeasonExpansion('${season.id}')">
                         <div class="season-info">
-                            <div class="season-name-in-list">${season.name || `Sezon ${season.seasonNumber}`}</div>
+                            <div class="season-name-in-list">${season.name || `Sezon ${season.seasonNumber}`} ${matchesCounter}</div>
                             <div class="season-details">
                                 <strong>Okres:</strong> ${formatDate(startDate)} - ${formatDate(endDate)}<br>
                                 <strong>Długość:</strong> ${days} dni<br>
                                 <strong>Uczestników:</strong> ${season.participants || 0}<br>
-                                <strong>Rozegrane mecze:</strong> ${season.matchesPlayed || 0}
+                                <strong>Rozegrane mecze:</strong> ${matchesPlayed}
                             </div>
                             
-                            ${season.podium ? `
-                            <div class="season-podium">
-                                <strong>🏆 Podium:</strong>
-                                ${season.podium.map((player, index) => `
-                                    <div class="podium-item">
-                                        <div class="podium-place podium-place-${index + 1}">${index + 1}</div>
-                                        <div>
-                                            <strong>${player.name}</strong><br>
-                                            <small>ELO: ${player.elo} | ${player.achievement || 'Brak osiągnięcia'}</small>
-                                        </div>
-                                    </div>
-                                `).join('')}
+                            <div class="season-expanded-content ${isExpanded ? 'show' : ''}">
+                                ${generateSeasonExpandedContent(season)}
                             </div>
-                            ` : ''}
                         </div>
                     </div>
                 `;
             });
             
             seasonsListElement.innerHTML = seasonsHTML;
+            
+            // Aktualizuj paginację
+            updatePaginationControls();
         }
         
-        // Funkcja do generowania formularza nowego sezonu - POPRAWIONA
+        // Funkcja do ładowania wszystkich sezonów (nie tylko 10)
+        async function loadAllSeasons() {
+            if (!db) return;
+            
+            try {
+                const seasonsSnapshot = await db.collection('seasons')
+                    .orderBy('seasonNumber', 'desc')
+                    .get();
+                
+                seasonsPagination.allSeasons = [];
+                seasonsSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    data.id = doc.id;
+                    
+                    if (data.status === 'ended') {
+                        seasonsPagination.allSeasons.push(data);
+                    }
+                });
+                
+                console.log(`Załadowano ${seasonsPagination.allSeasons.length} zakończonych sezonów`);
+                
+            } catch (error) {
+                console.error("Błąd ładowania wszystkich sezonów:", error);
+                seasonsPagination.allSeasons = [];
+            }
+        }
+        
+        // NOWA FUNKCJA: Otwieranie modala wyboru strony z przewijaną listą
+        function openPageSelectorModal() {
+            const modal = document.getElementById('pageSelectorModal');
+            const pageSelectorList = document.getElementById('pageSelectorList');
+            const pageSelectorInfo = document.getElementById('pageSelectorInfo');
+            
+            if (!modal || !pageSelectorList || !pageSelectorInfo) return;
+            
+            // Wyczyść poprzednią listę
+            pageSelectorList.innerHTML = '';
+            
+            // Utwórz kontener dla listy
+            const listContainer = document.createElement('div');
+            listContainer.className = 'page-list';
+            
+            // Dodaj przyciski dla każdej strony
+            for (let i = 1; i <= seasonsPagination.totalPages; i++) {
+                const button = document.createElement('button');
+                button.className = 'page-number-btn';
+                if (i === seasonsPagination.currentPage) {
+                    button.classList.add('active');
+                }
+                button.textContent = `Strona ${i}`;
+                button.onclick = () => {
+                    seasonsPagination.currentPage = i;
+                    generateSeasonsPage();
+                    closePageSelectorModal();
+                };
+                listContainer.appendChild(button);
+            }
+            
+            pageSelectorList.appendChild(listContainer);
+            
+            // Ustaw informację o ilości stron
+            const totalSeasons = seasonsPagination.allSeasons.length;
+            const seasonsOnCurrentPage = getSeasonsOnCurrentPage();
+            
+            pageSelectorInfo.innerHTML = `
+                Łącznie: ${totalSeasons} sezonów<br>
+                Stron: ${seasonsPagination.totalPages}<br>
+                Na bieżącej stronie: ${seasonsOnCurrentPage} sezonów
+            `;
+            
+            // Pokaż modal
+            modal.classList.add('active');
+        }
+        
+        // NOWA FUNKCJA: Pobierz ilość sezonów na bieżącej stronie
+        function getSeasonsOnCurrentPage() {
+            const paginationInfo = calculateSeasonsPerPage();
+            const seasonsPerPage = paginationInfo.seasonsPerPage;
+            
+            if (seasonsPagination.currentPage === 1) {
+                return seasonsPerPage[0];
+            } else {
+                return seasonsPerPage[seasonsPagination.currentPage - 1] || 10;
+            }
+        }
+        
+        // Funkcja do zmiany strony sezonów
+        function changeSeasonsPage(direction) {
+            const newPage = seasonsPagination.currentPage + direction;
+            
+            if (newPage < 1 || newPage > seasonsPagination.totalPages) {
+                return;
+            }
+            
+            seasonsPagination.currentPage = newPage;
+            generateSeasonsPage();
+        }
+        
+        // Funkcja do aktualizacji kontrolek paginacji
+        function updatePaginationControls() {
+            const prevPageBtn = document.getElementById('prevPageBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            const pageIndicator = document.getElementById('pageIndicator');
+            
+            if (!prevPageBtn || !nextPageBtn || !pageIndicator) return;
+            
+            // Aktualizuj przyciski strzałek
+            prevPageBtn.disabled = seasonsPagination.currentPage <= 1;
+            nextPageBtn.disabled = seasonsPagination.currentPage >= seasonsPagination.totalPages;
+            
+            // Pokaż/ukryj strzałki w zależności od liczby stron
+            if (seasonsPagination.totalPages <= 1) {
+                prevPageBtn.style.display = 'none';
+                nextPageBtn.style.display = 'none';
+            } else {
+                prevPageBtn.style.display = 'flex';
+                nextPageBtn.style.display = 'flex';
+            }
+            
+            // Aktualizuj wskaźnik strony
+            const seasonsOnCurrentPage = getSeasonsOnCurrentPage();
+            pageIndicator.textContent = `${seasonsPagination.currentPage} z ${seasonsPagination.totalPages} (${seasonsOnCurrentPage} sezonów)`;
+            pageIndicator.title = `Kliknij aby wybrać stronę`;
+        }
+        
+        // Funkcja do zamykania modala wyboru strony
+        function closePageSelectorModal() {
+            const modal = document.getElementById('pageSelectorModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+        
+        // Funkcja do generowania rozszerzonej zawartości sezonu
+        function generateSeasonExpandedContent(season) {
+            const startDate = new Date(season.startDate);
+            const endDate = new Date(season.endDate);
+            const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+            const matchesPlayed = season.matchesPlayed || 0;
+            
+            let contentHTML = `
+                <div class="season-stats-grid">
+                    <div class="season-podium">
+                        <h4>🏆 Podium sezonu:</h4>
+            `;
+            
+            if (season.podium && season.podium.length > 0) {
+                season.podium.forEach((player, index) => {
+                    contentHTML += `
+                        <div class="podium-item">
+                            <div class="podium-place podium-place-${index + 1}">${index + 1}</div>
+                            <div>
+                                <strong>${player.name}</strong><br>
+                                <small>ELO: ${player.elo}</small>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                contentHTML += `<p style="color: #777; text-align: center;">Brak danych podium</p>`;
+            }
+            
+            contentHTML += `
+                    </div>
+                    
+                    <div class="season-player-ranking">
+                        <h4>📊 Ranking sezonu:</h4>
+            `;
+            
+            if (season.finalEloStats && season.finalEloStats.length > 0) {
+                const sortedPlayers = season.finalEloStats.sort((a, b) => b.finalElo - a.finalElo);
+                const playersToShow = sortedPlayers.slice(0, 10);
+                
+                playersToShow.forEach((player, index) => {
+                    const placeClass = index < 3 ? `ranking-place-${index + 1}` : '';
+                    contentHTML += `
+                        <div class="ranking-item">
+                            <div class="ranking-place ${placeClass}">${index + 1}</div>
+                            <div>
+                                <strong>${player.name}</strong><br>
+                                <small>ELO: ${player.finalElo}</small>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                if (sortedPlayers.length > 10) {
+                    contentHTML += `<p style="text-align: center; color: #aaa; font-size: 12px;">... i ${sortedPlayers.length - 10} więcej</p>`;
+                }
+            } else {
+                contentHTML += `<p style="color: #777; text-align: center;">Brak danych rankingu</p>`;
+            }
+            
+            contentHTML += `
+                    </div>
+                </div>
+                
+                <div style="background: #1a1a1a; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                    <h4>📈 Podsumowanie sezonu:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+                        <div style="text-align: center; padding: 10px; background: #2d2d2d; border-radius: 5px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #4CAF50;">${season.participants || 0}</div>
+                            <div style="font-size: 12px; color: #aaa;">Uczestników</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #2d2d2d; border-radius: 5px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #4CAF50;">${matchesPlayed}</div>
+                            <div style="font-size: 12px; color: #aaa;">Rozegranych meczy</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #2d2d2d; border-radius: 5px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #4CAF50;">${days}</div>
+                            <div style="font-size: 12px; color: #aaa;">Dni trwania</div>
+                        </div>
+                        <div style="text-align: center; padding: 10px; background: #2d2d2d; border-radius: 5px;">
+                            <div style="font-size: 24px; font-weight: bold; color: #4CAF50;">${season.achievements ? season.achievements.length : 0}</div>
+                            <div style="font-size: 12px; color: #aaa;">Przyznanych osiągnięć</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Osiągnięcia
+            if (season.achievements && season.achievements.length > 0) {
+                contentHTML += `
+                    <div class="achievements-section">
+                        <h4>🏅 Osiągnięcia sezonu:</h4>
+                `;
+                
+                season.achievements.forEach(achievement => {
+                    if (achievement.type !== 'None') {
+                        const achievementData = achievements.find(a => a.name === achievement.type);
+                        const achievementImage = achievementData ? achievementData.image : '';
+                        
+                        contentHTML += `
+                            <div class="achievement-item">
+                                <div class="achievement-item-image">
+                                    ${achievementImage ? `<img src="${achievementImage}" alt="${achievement.type}">` : '🏅'}
+                                </div>
+                                <div>
+                                    <strong>${achievement.playerName}</strong><br>
+                                    <small>${achievement.type}</small>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                if (season.achievements.filter(a => a.type === 'None').length > 0) {
+                    contentHTML += `<p style="color: #777; font-size: 12px; text-align: center;">Osiągnięcie "None" nie jest wyświetlane</p>`;
+                }
+                
+                contentHTML += `</div>`;
+            }
+            
+            // System rang sezonu - Z ZDJĘCIAMI
+            if (season.rankThresholds) {
+                contentHTML += `
+                    <div class="ranks-section">
+                        <h4>⭐ System rang w sezonie:</h4>
+                `;
+                
+                ranks.forEach(rank => {
+                    const minElo = season.rankThresholds[rank.id] || rank.minElo;
+                    let maxElo = rank.maxElo;
+                    
+                    if (rank.id < 9) {
+                        maxElo = season.rankThresholds[rank.id + 1] ? season.rankThresholds[rank.id + 1] - 1 : rank.maxElo;
+                    }
+                    
+                    let eloRange = '';
+                    if (rank.id === 1) {
+                        eloRange = `ELO: ${minElo}-${maxElo}`;
+                    } else if (rank.id === ranks.length) {
+                        eloRange = `ELO: ${minElo}+`;
+                    } else {
+                        eloRange = `ELO: ${minElo}`;
+                    }
+                    
+                    const rankClass = rank.id === 1 ? 'rank-1' : (rank.id === 9 ? 'rank-9' : '');
+                    
+                    contentHTML += `
+                        <div class="season-rank-item ${rankClass}">
+                            <div class="season-rank-header">
+                                <div class="season-rank-number">${rank.id}</div>
+                                <div class="season-rank-name">${rank.name}</div>
+                                <div class="season-rank-elo">${eloRange}</div>
+                            </div>
+                            
+                            <div class="season-rank-image-container">
+                                ${rank.image ? 
+                                    `<img src="${rank.image}" alt="${rank.name}" class="season-rank-image">` : 
+                                    `<div style="color: #777; font-size: 10px; text-align: center; padding: 5px;">
+                                        Ranga ${rank.id}
+                                     </div>`
+                                }
+                            </div>
+                    `;
+                    
+                    if (season.finalEloStats) {
+                        const playersInRank = season.finalEloStats.filter(player => 
+                            player.finalElo >= minElo && player.finalElo <= maxElo
+                        );
+                        
+                        if (playersInRank.length > 0) {
+                            contentHTML += `<div class="season-rank-players">`;
+                            const playersToShow = playersInRank.slice(0, 5);
+                            
+                            playersToShow.forEach(player => {
+                                contentHTML += `
+                                    <div class="season-rank-player">
+                                        <span>${player.name}</span>
+                                        <span class="season-rank-player-elo">${player.finalElo}</span>
+                                    </div>
+                                `;
+                            });
+                            
+                            if (playersInRank.length > 5) {
+                                contentHTML += `<div class="season-rank-player" style="background: #444;">+${playersInRank.length - 5} więcej</div>`;
+                            }
+                            
+                            contentHTML += `</div>`;
+                        } else {
+                            contentHTML += `<p style="color: #777; font-size: 12px; text-align: center;">Brak graczy na tej randze</p>`;
+                        }
+                    } else {
+                        contentHTML += `<p style="color: #777; font-size: 12px; text-align: center;">Brak danych graczy</p>`;
+                    }
+                    
+                    contentHTML += `</div>`;
+                });
+                
+                contentHTML += `</div>`;
+            }
+            
+            return contentHTML;
+        }
+        
+        // Funkcja do rozwijania/zwijania sezonu
+        function toggleSeasonExpansion(seasonId) {
+            if (expandedSeasonId === seasonId) {
+                expandedSeasonId = null;
+            } else {
+                expandedSeasonId = seasonId;
+            }
+            generateSeasonsPage();
+        }
+        
+        // Funkcja do generowania formularza nowego sezonu
         function generateNewSeasonForm() {
             const eloThresholdsElement = document.getElementById('eloThresholds');
             if (!eloThresholdsElement) return;
             
             let thresholdsHTML = '';
             
-            // Dla rang 1-8 (ranga 9 jest od ostatniego progu)
             for (let i = 1; i <= 8; i++) {
                 const rank = ranks.find(r => r.id === i);
                 if (!rank) continue;
@@ -4488,7 +5770,6 @@
                 `;
             }
             
-            // Dla rangi 9 (ostatniej)
             thresholdsHTML += `
                 <div class="elo-threshold-item">
                     <label>${ranks[8].name} (Ranga 9):</label>
@@ -4504,7 +5785,6 @@
             
             eloThresholdsElement.innerHTML = thresholdsHTML;
             
-            // Ustaw minimalne daty
             const today = new Date().toISOString().split('T')[0];
             const startDateInput = document.getElementById('seasonStartDate');
             const endDateInput = document.getElementById('seasonEndDate');
@@ -4512,7 +5792,6 @@
             if (startDateInput) {
                 startDateInput.min = today;
                 if (!startDateInput.value) {
-                    // Ustaw domyślnie dzisiejszą datę
                     startDateInput.value = today;
                 }
             }
@@ -4520,7 +5799,6 @@
             if (endDateInput) {
                 endDateInput.min = today;
                 if (!endDateInput.value) {
-                    // Ustaw domyślnie datę za 30 dni
                     const defaultEndDate = new Date();
                     defaultEndDate.setDate(defaultEndDate.getDate() + 30);
                     endDateInput.value = defaultEndDate.toISOString().split('T')[0];
@@ -4543,7 +5821,6 @@
                 const value = parseInt(input.value) || 0;
                 
                 if (i === 1) {
-                    // Ranga 1 musi mieć minElo >= 0
                     if (value < 0) {
                         input.style.borderColor = '#f44336';
                         isValid = false;
@@ -4551,7 +5828,6 @@
                         input.style.borderColor = '#444';
                     }
                 } else {
-                    // Każda kolejna ranga musi mieć wyższy próg niż poprzednia
                     if (value <= previousValue) {
                         input.style.borderColor = '#f44336';
                         isValid = false;
@@ -4566,7 +5842,7 @@
             return isValid;
         }
         
-        // Walidacja dat sezonu - POPRAWIONA
+        // Walidacja dat sezonu
         function validateSeasonDates() {
             const startDateInput = document.getElementById('seasonStartDate');
             const endDateInput = document.getElementById('seasonEndDate');
@@ -4577,7 +5853,6 @@
             const startDate = new Date(startDateInput.value);
             const endDate = new Date(endDateInput.value);
             
-            // Ustaw minimalną datę końca na dzień po starcie
             if (startDateInput.value) {
                 const minEndDate = new Date(startDate);
                 minEndDate.setDate(minEndDate.getDate() + 1);
@@ -4587,11 +5862,9 @@
                 }
             }
             
-            // Sprawdź czy daty są poprawne
             const now = new Date();
-            now.setHours(0, 0, 0, 0); // Resetuj godziny do 00:00
+            now.setHours(0, 0, 0, 0);
             
-            // Start może być dzisiaj lub w przyszłości
             const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
             
             const isValid = startDateOnly >= now && 
@@ -4603,7 +5876,66 @@
             return isValid;
         }
         
-        // Rozpocznij nowy sezon - POPRAWIONA
+        // ============================================
+        // POPRAWIONA FUNKCJA: ARCHIWIZACJA HISTORII MECZÓW
+        // ============================================
+        
+        async function archiveOldMatches(seasonNumber) {
+            if (!db) {
+                console.error('Brak połączenia z Firebase');
+                return;
+            }
+            
+            console.log(`🔍 Archiwizacja meczów dla sezonu ${seasonNumber}...`);
+            
+            try {
+                const historySnapshot = await db.collection('history').get();
+                
+                if (historySnapshot.empty) {
+                    console.log('Brak meczów do archiwizacji');
+                    return;
+                }
+                
+                const batch = db.batch();
+                let archivedCount = 0;
+                
+                historySnapshot.forEach(doc => {
+                    const matchData = doc.data();
+                    
+                    // ZACHOWUJEMY ORYGINALNY readableId
+                    const archivedMatch = {
+                        ...matchData,
+                        archivedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        archivedSeason: seasonNumber,
+                        originalId: doc.id,
+                        // WAŻNE: Zachowujemy oryginalny readableId
+                        readableId: matchData.readableId || doc.id
+                    };
+                    
+                    // Używamy ORYGINALNEGO readableId jako ID dokumentu w archiwum
+                    const archiveId = matchData.readableId || doc.id;
+                    const archiveRef = db.collection('matchesArchive').doc(archiveId);
+                    batch.set(archiveRef, archivedMatch);
+                    
+                    batch.delete(doc.ref);
+                    
+                    archivedCount++;
+                });
+                
+                await batch.commit();
+                console.log(`✅ Zarchiwizowano ${archivedCount} meczów do archiwum dla sezonu ${seasonNumber}`);
+                return archivedCount;
+                
+            } catch (error) {
+                console.error('Błąd archiwizacji meczów:', error);
+                throw error;
+            }
+        }
+        
+        // ============================================
+        // POPRAWIONA FUNKCJA: ROZPOCZNIJ NOWY SEZON
+        // ============================================
+        
         async function createNewSeason() {
             if (!db) {
                 alert('Brak połączenia z Firebase!');
@@ -4615,7 +5947,6 @@
                 return;
             }
             
-            // Sprawdź czy można rozpocząć nowy sezon - DEV też nie może podczas sezonu
             const now = new Date();
             if (currentSeason) {
                 const endDate = new Date(currentSeason.endDate);
@@ -4625,7 +5956,6 @@
                 }
             }
             
-            // Pobierz wartości z formularza
             const rankThresholds = {};
             for (let i = 1; i <= 9; i++) {
                 const input = document.getElementById(`rankThreshold${i}`);
@@ -4638,7 +5968,6 @@
             const endDate = document.getElementById('seasonEndDate').value;
             const seasonName = document.getElementById('seasonName').value.trim();
             
-            // Walidacja
             if (!startDate || !endDate) {
                 alert('Wybierz datę początku i końca sezonu!');
                 return;
@@ -4649,10 +5978,8 @@
                 return;
             }
             
-            // Pobierz numer nowego sezonu - POPRAWIONE
             let seasonNumber = 1;
             try {
-                // Pobierz wszystkie sezony aby znaleźć najwyższy numer
                 const seasonsSnapshot = await db.collection('seasons').get();
                 let maxSeasonNumber = 0;
                 
@@ -4670,14 +5997,38 @@
                 console.error("Błąd pobierania numeru sezonu:", error);
             }
             
-            // Przygotuj dane sezonu
+            // ARCHIWIZACJA: Przenieś stare mecze do archiwum, ZACHOWUJĄC ORYGINALNE ID
+            try {
+                await archiveOldMatches(seasonNumber);
+            } catch (error) {
+                console.error("Błąd archiwizacji, kontynuuję tworzenie sezonu:", error);
+            }
+            
+            // RESET ELO WSZYSTKICH GRACZY DO 1500 PRZED ROZPOCZĘCIEM SEZONU
+            try {
+                console.log('🔄 Resetowanie ELO wszystkich graczy do 1500...');
+                const playersSnapshot = await db.collection('players').get();
+                const batch = db.batch();
+                
+                playersSnapshot.forEach(doc => {
+                    batch.update(doc.ref, { elo: 1500 });
+                });
+                
+                await batch.commit();
+                console.log('✅ ELO wszystkich graczy zresetowane do 1500');
+            } catch (error) {
+                console.error('Błąd resetowania ELO:', error);
+                alert('Błąd resetowania ELO graczy: ' + error.message);
+                return;
+            }
+            
             const seasonData = {
                 seasonNumber: seasonNumber,
                 name: seasonName || `Sezon ${seasonNumber} ${new Date().getFullYear()}/${new Date().getFullYear() + 1}`,
                 startDate: startDate,
                 endDate: endDate,
                 rankThresholds: rankThresholds,
-                status: 'pending', // pending, running, ended
+                status: 'pending',
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 createdBy: currentUserRole,
                 participants: players.length,
@@ -4685,23 +6036,24 @@
             };
             
             try {
-                // Utwórz unikalny ID dla sezonu
                 const seasonId = `season_${seasonNumber}`;
                 
-                // Zapisz sezon w Firebase z unikalnym ID
                 await db.collection('seasons').doc(seasonId).set(seasonData);
                 
-                // Ustaw jako bieżący sezon
                 await db.collection('system').doc('currentSeason').set({
                     seasonId: seasonId,
                     seasonNumber: seasonNumber,
                     lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                alert(`✅ Rozpoczęto nowy sezon: ${seasonData.name}\nNumer sezonu: ${seasonNumber}`);
+                // Ustaw licznik meczy dla nowego sezonu
+                const seasonKey = `season${seasonNumber}_matchCounter`;
+                await updateMatchCounterInSettings(seasonKey, 1);
                 
-                // Przeładuj dane
+                alert(`✅ Rozpoczęto nowy sezon: ${seasonData.name}\nNumer sezonu: ${seasonNumber}\nRozegrane mecze: 0\nELO wszystkich graczy zostało zresetowane do 1500.\nStare mecze zostały zarchiwizowane z zachowaniem oryginalnych nazw.`);
+                
                 await loadCurrentSeason();
+                loadData(); // Przeładuj dane graczy
                 showPage('ranks');
                 
             } catch (error) {
@@ -4710,7 +6062,10 @@
             }
         }
         
-        // Funkcja do zakończenia sezonu przez DEV - POPRAWIONA
+        // ============================================
+        // POPRAWIONA FUNKCJA: ZAKOŃCZ SEZON
+        // ============================================
+        
         async function endSeasonDev() {
             if (currentUserRole !== 'dev') {
                 alert('Tylko dostęp systemowy może zakończyć sezon!');
@@ -4727,52 +6082,82 @@
             }
             
             try {
-                // Oblicz podium i osiągnięcia
                 const sortedPlayers = players.sort((a, b) => b.elo - a.elo);
                 const podium = sortedPlayers.slice(0, 3).map((player, index) => ({
                     name: player.name,
                     elo: player.elo,
-                    achievement: getAchievementForPosition(index + 1, player.elo)
+                    achievement: getAchievementForPosition(index + 1, player.elo, currentSeason.rankThresholds)
                 }));
                 
-                // Zresetuj ELO wszystkich graczy do 1500
+                const achievements = calculateAchievements(sortedPlayers, currentSeason.rankThresholds);
+                
+                const seasonStart = new Date(currentSeason.startDate);
+                const seasonEnd = new Date(currentSeason.endDate);
+                seasonEnd.setHours(23, 59, 59, 999);
+                
+                const matchesQuery = await db.collection('history')
+                    .where('seasonNumber', '==', currentSeason.seasonNumber)
+                    .get();
+                
+                const matchesPlayed = matchesQuery.size;
+                
                 const batch = db.batch();
                 const playersSnapshot = await db.collection('players').get();
                 
+                // RESET ELO WSZYSTKICH GRACZY DO 1500
                 playersSnapshot.forEach(doc => {
                     batch.update(doc.ref, { elo: 1500 });
                 });
                 
-                // Aktualizuj dane sezonu - UŻYJ UPDATE zamiast SET
                 const seasonRef = db.collection('seasons').doc(currentSeason.id);
                 
-                // Przygotuj tylko pola do aktualizacji
                 const updates = {
                     status: 'ended',
                     endedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     participants: players.length,
                     podium: podium,
+                    achievements: achievements,
                     finalEloStats: players.map(p => ({ name: p.name, finalElo: p.elo })),
-                    matchesPlayed: history.length,
+                    matchesPlayed: matchesPlayed,
                     endedBy: 'dev',
                     endedManually: true
                 };
                 
-                // Użyj update() zamiast set() - to aktualizuje tylko wybrane pola
                 batch.update(seasonRef, updates);
                 
-                // Usuń bieżący sezon z systemu
                 const currentSeasonRef = db.collection('system').doc('currentSeason');
                 batch.delete(currentSeasonRef);
                 
+                // ARCHIWIZACJA: Przenieś mecze z tego sezonu do archiwum ZACHOWUJĄC ORYGINALNE ID
+                if (matchesPlayed > 0) {
+                    matchesQuery.forEach(doc => {
+                        const matchData = doc.data();
+                        const archivedMatch = {
+                            ...matchData,
+                            archivedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            archivedSeason: currentSeason.seasonNumber,
+                            originalId: doc.id,
+                            seasonId: currentSeason.id,
+                            // ZACHOWUJEMY ORYGINALNY readableId
+                            readableId: matchData.readableId || doc.id
+                        };
+                        
+                        // Używamy oryginalnego readableId jako ID w archiwum
+                        const archiveId = matchData.readableId || doc.id;
+                        const archiveRef = db.collection('matchesArchive').doc(archiveId);
+                        batch.set(archiveRef, archivedMatch);
+                        
+                        batch.delete(doc.ref);
+                    });
+                }
+                
                 await batch.commit();
                 
-                alert('✅ Sezon został zakończony!\nELO wszystkich graczy zresetowane do 1500.\nSezon został dodany do archiwum.');
+                alert(`✅ Sezon został zakończony!\nELO wszystkich graczy zresetowane do 1500.\nRozegrano ${matchesPlayed} meczy (tylko z tego sezonu!).\nSezon został dodany do archiwum z zachowaniem oryginalnych nazw meczów.`);
                 
-                // Przeładuj dane
                 loadData();
                 await loadCurrentSeason();
-                await loadPreviousSeasons();
+                await loadAllSeasons(); // Załaduj wszystkie sezony po zakończeniu
                 showPage('ranks');
                 
             } catch (error) {
@@ -4781,22 +6166,143 @@
             }
         }
         
+        // ============================================
+        // POPRAWIONA FUNKCJA: AUTOMATYCZNE KOŃCZENIE SEZONU
+        // ============================================
+        
+        async function endSeasonAutomatically() {
+            if (!db || !currentSeason || currentSeason.status === 'ended') return;
+            
+            try {
+                console.log("Automatyczne kończenie sezonu:", currentSeason.name);
+                
+                const sortedPlayers = players.sort((a, b) => b.elo - a.elo);
+                const podium = sortedPlayers.slice(0, 3).map((player, index) => ({
+                    name: player.name,
+                    elo: player.elo,
+                    achievement: getAchievementForPosition(index + 1, player.elo, currentSeason.rankThresholds)
+                }));
+                
+                const achievements = calculateAchievements(sortedPlayers, currentSeason.rankThresholds);
+                
+                const seasonStart = new Date(currentSeason.startDate);
+                const seasonEnd = new Date(currentSeason.endDate);
+                seasonEnd.setHours(23, 59, 59, 999);
+                
+                const matchesQuery = await db.collection('history')
+                    .where('seasonNumber', '==', currentSeason.seasonNumber)
+                    .get();
+                
+                const matchesPlayed = matchesQuery.size;
+                
+                const batch = db.batch();
+                const playersSnapshot = await db.collection('players').get();
+                
+                // RESET ELO WSZYSTKICH GRACZY DO 1500
+                playersSnapshot.forEach(doc => {
+                    batch.update(doc.ref, { elo: 1500 });
+                });
+                
+                const seasonRef = db.collection('seasons').doc(currentSeason.id);
+                
+                const updates = {
+                    status: 'ended',
+                    endedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    participants: players.length,
+                    podium: podium,
+                    achievements: achievements,
+                    finalEloStats: players.map(p => ({ name: p.name, finalElo: p.elo })),
+                    matchesPlayed: matchesPlayed,
+                    endedBy: 'auto',
+                    endedManually: false
+                };
+                
+                batch.update(seasonRef, updates);
+                
+                const currentSeasonRef = db.collection('system').doc('currentSeason');
+                batch.delete(currentSeasonRef);
+                
+                if (matchesPlayed > 0) {
+                    matchesQuery.forEach(doc => {
+                        const matchData = doc.data();
+                        const archivedMatch = {
+                            ...matchData,
+                            archivedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            archivedSeason: currentSeason.seasonNumber,
+                            originalId: doc.id,
+                            seasonId: currentSeason.id,
+                            // ZACHOWUJEMY ORYGINALNY readableId
+                            readableId: matchData.readableId || doc.id
+                        };
+                        
+                        // Używamy oryginalnego readableId jako ID w archiwum
+                        const archiveId = matchData.readableId || doc.id;
+                        const archiveRef = db.collection('matchesArchive').doc(archiveId);
+                        batch.set(archiveRef, archivedMatch);
+                        
+                        batch.delete(doc.ref);
+                    });
+                }
+                
+                await batch.commit();
+                
+                console.log(`✅ Sezon zakończony automatycznie. Rozegrano ${matchesPlayed} meczy (tylko z tego sezonu).`);
+                
+                loadData();
+                await loadCurrentSeason();
+                await loadAllSeasons(); // Załaduj wszystkie sezony
+                
+            } catch (error) {
+                console.error("Błąd automatycznego kończenia sezonu:", error);
+            }
+        }
+        
+        // Funkcja obliczająca osiągnięcia
+        function calculateAchievements(players, rankThresholds) {
+            const achievements = [];
+            const rank9Threshold = rankThresholds ? rankThresholds[9] : 2401;
+            
+            players.forEach((player, index) => {
+                let achievementType = 'None';
+                
+                const hasRank9 = rankThresholds ? player.elo >= rank9Threshold : player.elo >= 2401;
+                
+                if (hasRank9) {
+                    if (index === 0) {
+                        achievementType = 'Top 1 of season [RANK9]';
+                    } else {
+                        achievementType = 'RANK9 of season';
+                    }
+                } else {
+                    if (index === 0) {
+                        achievementType = 'Top 1 of season';
+                    } else if (index === 1) {
+                        achievementType = 'Top 2 of season';
+                    } else if (index === 2) {
+                        achievementType = 'Top 3 of season';
+                    }
+                }
+                
+                if (achievementType !== 'None') {
+                    achievements.push({
+                        playerName: player.name,
+                        playerId: player.id,
+                        type: achievementType,
+                        position: index + 1,
+                        elo: player.elo
+                    });
+                }
+            });
+            
+            return achievements;
+        }
+        
         // Funkcje pomocnicze
         function formatDate(date) {
             return date.toLocaleDateString('pl-PL', {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric'
-            });
-        }
-        
-        function formatDateTime(date) {
-            return date.toLocaleDateString('pl-PL', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
             });
         }
         
@@ -4812,47 +6318,7 @@
             showPage('seasons');
         }
         
-        // Funkcja diagnostyczna do sprawdzenia sezonów w Firebase
-        async function debugSeasons() {
-            if (!db) return;
-            
-            try {
-                console.log("=== DIAGNOSTYKA SEZONÓW ===");
-                
-                // Pobierz wszystkie sezony
-                const seasonsSnapshot = await db.collection('seasons').get();
-                
-                console.log(`Znaleziono ${seasonsSnapshot.size} sezonów w Firebase:`);
-                
-                seasonsSnapshot.forEach(doc => {
-                    const data = doc.data();
-                    console.log(`Sezon: ${data.name || `Sezon ${data.seasonNumber}`}`);
-                    console.log(`- ID: ${doc.id}`);
-                    console.log(`- Numer: ${data.seasonNumber}`);
-                    console.log(`- Status: ${data.status || 'brak'}`);
-                    console.log(`- Data rozpoczęcia: ${data.startDate}`);
-                    console.log(`- Data zakończenia: ${data.endDate}`);
-                    console.log(`- Zakończony przez: ${data.endedBy || 'nie'}`);
-                    console.log('---');
-                });
-                
-                // Sprawdź bieżący sezon
-                const currentSeasonDoc = await db.collection('system').doc('currentSeason').get();
-                if (currentSeasonDoc.exists) {
-                    console.log("Bieżący sezon w systemie:", currentSeasonDoc.data());
-                } else {
-                    console.log("Brak bieżącego sezonu w systemie");
-                }
-                
-                // Sprawdź liczbę graczy
-                console.log(`Liczba graczy: ${players.length}`);
-                
-            } catch (error) {
-                console.error("Błąd diagnostyki:", error);
-            }
-        }
-        
-        // Ładowanie danych sezonu - POPRAWIONE
+        // Ładowanie danych sezonu
         async function loadCurrentSeason() {
             if (!db) return;
             
@@ -4870,12 +6336,10 @@
                             currentSeason = seasonDocData.data();
                             currentSeason.id = seasonDocData.id;
                             
-                            // Sprawdź czy sezon się już zakończył
                             const now = new Date();
                             const endDate = new Date(currentSeason.endDate);
                             
                             if (now > endDate && currentSeason.status !== 'ended') {
-                                // Automatycznie zakończ sezon
                                 await endSeasonAutomatically();
                             }
                         } else {
@@ -4892,6 +6356,8 @@
                 generateSeasonStatus();
                 updateNewSeasonButton();
                 updateEndSeasonButton();
+                updateRankingTitle();
+                loadHistoryBasedOnSeason(); // Załaduj odpowiednią historię
                 
             } catch (error) {
                 console.error("Błąd ładowania sezonu:", error);
@@ -4899,103 +6365,25 @@
             }
         }
         
-        // Ładowanie wcześniejszych sezonów - POPRAWIONE
-        async function loadPreviousSeasons() {
-            if (!db) return;
+        // Funkcje pomocnicze do paginacji
+        function getAchievementForPosition(position, elo, rankThresholds) {
+            const rank9Threshold = rankThresholds ? rankThresholds[9] : 2401;
+            const hasRank9 = elo >= rank9Threshold;
             
-            try {
-                const seasonsSnapshot = await db.collection('seasons')
-                    .orderBy('seasonNumber', 'desc')
-                    .limit(10)
-                    .get();
-                
-                previousSeasons = [];
-                seasonsSnapshot.forEach(doc => {
-                    const data = doc.data();
-                    data.id = doc.id;
-                    
-                    // Dodaj tylko sezony które są zakończone LUB nie są bieżącym sezonem
-                    if (data.status === 'ended') {
-                        previousSeasons.push(data);
-                    }
-                });
-                
-                console.log(`Załadowano ${previousSeasons.length} zakończonych sezonów`, previousSeasons);
-                
-            } catch (error) {
-                console.error("Błąd ładowania sezonów:", error);
-                previousSeasons = [];
-            }
-        }
-        
-        // Automatyczne kończenie sezonu - POPRAWIONE
-        async function endSeasonAutomatically() {
-            if (!db || !currentSeason || currentSeason.status === 'ended') return;
-            
-            try {
-                console.log("Automatyczne kończenie sezonu:", currentSeason.name);
-                
-                // Oblicz podium
-                const sortedPlayers = players.sort((a, b) => b.elo - a.elo);
-                const podium = sortedPlayers.slice(0, 3).map((player, index) => ({
-                    name: player.name,
-                    elo: player.elo,
-                    achievement: getAchievementForPosition(index + 1, player.elo)
-                }));
-                
-                // Zresetuj ELO wszystkich graczy do 1500
-                const batch = db.batch();
-                const playersSnapshot = await db.collection('players').get();
-                
-                playersSnapshot.forEach(doc => {
-                    batch.update(doc.ref, { elo: 1500 });
-                });
-                
-                // Aktualizuj dane sezonu
-                const seasonRef = db.collection('seasons').doc(currentSeason.id);
-                
-                const updates = {
-                    status: 'ended',
-                    endedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    participants: players.length,
-                    podium: podium,
-                    finalEloStats: players.map(p => ({ name: p.name, finalElo: p.elo })),
-                    matchesPlayed: history.length,
-                    endedBy: 'auto',
-                    endedManually: false
-                };
-                
-                // Zaktualizuj istniejący dokument
-                batch.update(seasonRef, updates);
-                
-                // Usuń bieżący sezon z systemu
-                const currentSeasonRef = db.collection('system').doc('currentSeason');
-                batch.delete(currentSeasonRef);
-                
-                await batch.commit();
-                
-                console.log('✅ Sezon zakończony automatycznie i dodany do archiwum');
-                
-                // Odśwież dane
-                loadData();
-                await loadCurrentSeason();
-                await loadPreviousSeasons();
-                
-            } catch (error) {
-                console.error("Błąd automatycznego kończenia sezonu:", error);
-            }
-        }
-        
-        // Funkcja do określania osiągnięcia na podstawie pozycji i ELO
-        function getAchievementForPosition(position, elo) {
-            if (position === 1 && elo >= (currentSeason?.rankThresholds[9] || 2401)) {
-                return "Top 1 of season [RANK9]";
-            } else if (position === 1) {
-                return "Top 1 of season";
-            } else if (position === 2) {
-                return "Top 2 of season";
-            } else if (position === 3) {
-                return "Top 3 of season";
+            if (hasRank9) {
+                if (position === 1) {
+                    return "Top 1 of season [RANK9]";
+                } else {
+                    return "RANK9 of season";
+                }
+            } else {
+                if (position === 1) {
+                    return "Top 1 of season";
+                } else if (position === 2) {
+                    return "Top 2 of season";
+                } else if (position === 3) {
+                    return "Top 3 of season";
+                }
             }
             return "None";
         }
@@ -5016,27 +6404,25 @@
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('Strona załadowana, inicjalizuję Firebase...');
             
-            // Inicjalizuj Firebase
             const firebaseInstance = initializeFirebase();
             
             if (firebaseInstance) {
                 db = firebaseInstance.db;
                 auth = firebaseInstance.auth;
                 
-                // Załaduj dane
                 loadData();
                 await loadCurrentSeason();
-                await loadPreviousSeasons();
+                await loadAllSeasons();
                 
                 updateUIForRole();
                 updateMenuForRole();
                 updateNewSeasonButton();
                 updateEndSeasonButton();
+                updateRankingTitle();
                 
             } else {
                 console.log('Tryb offline - pokazuję dane demo');
                 
-                // Przykładowi gracze dla demo
                 players = [
                     { id: '1', name: 'Jan Kowalski', elo: 2450, code: '12345' },
                     { id: '2', name: 'Anna Nowak', elo: 2200, code: '23456' },
@@ -5054,9 +6440,9 @@
                 updateMenuForRole();
                 updateNewSeasonButton();
                 updateEndSeasonButton();
+                updateRankingTitle();
             }
             
-            // Dodaj event listeners
             setTimeout(() => {
                 const selectPlayerA = document.getElementById('selectPlayerA');
                 const selectPlayerB = document.getElementById('selectPlayerB');
@@ -5069,7 +6455,6 @@
                     selectPlayerB.addEventListener('change', onPlayerSelectChange);
                 }
                 
-                // Event listener dla Enter w polu hasła
                 const adminPasswordInput = document.getElementById('adminPassword');
                 if (adminPasswordInput) {
                     adminPasswordInput.addEventListener('keypress', function(e) {
@@ -5079,15 +6464,18 @@
                     });
                 }
                 
-                // Obsługa ESC w modalach
                 document.addEventListener('keydown', function(event) {
                     const modal = document.getElementById('codeModal');
                     if (event.key === 'Escape' && modal && modal.classList.contains('active')) {
                         closeCodeModal();
                     }
+                    
+                    const pageModal = document.getElementById('pageSelectorModal');
+                    if (event.key === 'Escape' && pageModal && pageModal.classList.contains('active')) {
+                        closePageSelectorModal();
+                    }
                 });
                 
-                // Kliknięcie poza modal
                 const modalOverlay = document.getElementById('codeModal');
                 if (modalOverlay) {
                     modalOverlay.addEventListener('click', function(event) {
@@ -5097,7 +6485,15 @@
                     });
                 }
                 
-                // Event listeners dla pól dartów
+                const pageModalOverlay = document.getElementById('pageSelectorModal');
+                if (pageModalOverlay) {
+                    pageModalOverlay.addEventListener('click', function(event) {
+                        if (event.target === this) {
+                            closePageSelectorModal();
+                        }
+                    });
+                }
+                
                 const dartInputs = ['dart1', 'dart2', 'dart3'];
                 dartInputs.forEach(id => {
                     const input = document.getElementById(id);
@@ -5105,7 +6501,6 @@
                         input.addEventListener('input', calculateTurnTotal);
                         input.addEventListener('keypress', function(e) {
                             if (e.key === 'Enter') {
-                                // Przejdź do następnego pola lub zatwierdź
                                 const currentIndex = dartInputs.indexOf(id);
                                 if (currentIndex < 2) {
                                     document.getElementById(dartInputs[currentIndex + 1]).focus();
@@ -5117,11 +6512,9 @@
                     }
                 });
                 
-                // Generuj kody
                 generateRandomCode();
                 generateRandomCodeDev();
                 
-                // Generuj początkowe widoki
                 generateRanksPage();
                 generateAchievementsPage();
                 generateSeasonStatus();
